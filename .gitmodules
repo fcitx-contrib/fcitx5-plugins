@@ -1,0 +1,51 @@
+[submodule "fcitx5-anthy"]
+	path = fcitx5-anthy
+	url = https://github.com/fcitx/fcitx5-anthy
+[submodule "fcitx5-bamboo"]
+	path = fcitx5-bamboo
+	url = https://github.com/fcitx/fcitx5-bamboo
+[submodule "fcitx5-chewing"]
+	path = fcitx5-chewing
+	url = https://github.com/fcitx/fcitx5-chewing
+[submodule "fcitx5-chinese-addons"]
+	path = fcitx5-chinese-addons
+	url = https://github.com/fcitx/fcitx5-chinese-addons
+[submodule "fcitx5-hallelujah"]
+	path = fcitx5-hallelujah
+	url = https://github.com/fcitx-contrib/fcitx5-hallelujah
+[submodule "fcitx5-hangul"]
+	path = fcitx5-hangul
+	url = https://github.com/fcitx/fcitx5-hangul
+[submodule "fcitx5-lua"]
+	path = fcitx5-lua
+	url = https://github.com/fcitx/fcitx5-lua
+[submodule "fcitx5-rime"]
+	path = fcitx5-rime
+	url = https://github.com/fcitx/fcitx5-rime
+[submodule "fcitx5-rime-data/rime-essay"]
+	path = fcitx5-rime-data/rime-essay
+	url = https://github.com/rime/rime-essay
+[submodule "fcitx5-rime-data/rime-luna-pinyin"]
+	path = fcitx5-rime-data/rime-luna-pinyin
+	url = https://github.com/rime/rime-luna-pinyin
+[submodule "fcitx5-rime-data/rime-prelude"]
+	path = fcitx5-rime-data/rime-prelude
+	url = https://github.com/rime/rime-prelude
+[submodule "fcitx5-rime-data/rime-stroke"]
+	path = fcitx5-rime-data/rime-stroke
+	url = https://github.com/rime/rime-stroke
+[submodule "fcitx5-sayura"]
+	path = fcitx5-sayura
+	url = https://github.com/fcitx/fcitx5-sayura
+[submodule "fcitx5-skk"]
+	path = fcitx5-skk
+	url = https://github.com/fcitx/fcitx5-skk
+[submodule "fcitx5-table-extra"]
+	path = fcitx5-table-extra
+	url = https://github.com/fcitx/fcitx5-table-extra
+[submodule "fcitx5-thai"]
+	path = fcitx5-thai
+	url = https://github.com/fcitx/fcitx5-libthai
+[submodule "fcitx5-unikey"]
+	path = fcitx5-unikey
+	url = https://github.com/fcitx/fcitx5-unikey

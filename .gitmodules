@@ -1,3 +1,6 @@
+[submodule "libime"]
+	path = libime
+	url = https://github.com/fcitx/libime
 [submodule "fcitx5-anthy"]
 	path = fcitx5-anthy
 	url = https://github.com/fcitx/fcitx5-anthy

@@ -1,0 +1,6 @@
+.DS_Store
+build
+cache/macos
+cache/js
+meta-*.json
+*.gz

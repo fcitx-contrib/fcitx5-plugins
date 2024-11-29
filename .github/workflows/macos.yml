@@ -64,7 +64,9 @@ jobs:
             build/macos-${{ matrix.arch }}/*-any.tar.bz2
 
       - name: Check validity
-        run: ./scripts/check-validity.sh
+        run: |
+          ./scripts/check-validity.sh
+          python scripts/check-shared-files.py build/macos-${{ matrix.arch }}/*/data/plugin/*.json
 
       - name: Generate meta-${{ matrix.arch }}.json
         run: |

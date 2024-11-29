@@ -62,7 +62,7 @@ jobs:
             build/macos-${{ matrix.arch }}/*-any.tar.bz2
 
       - name: Check validity
-        run: ./check-validity.sh
+        run: ./scripts/check-validity.sh
 
       - name: Generate meta-${{ matrix.arch }}.json
         run: |

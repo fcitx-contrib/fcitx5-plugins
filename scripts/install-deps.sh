@@ -39,3 +39,5 @@ for dep in "${deps[@]}"; do
   [[ -f $CACHE_DIR/$file ]] || wget -P $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PLATFORM/$file
   tar xjf $CACHE_DIR/$file -C $EXTRACT_DIR
 done
+
+sed -i.bak 's|Requires: glib-2.0.*|Requires: glib-2.0|' $(find build -name gobject-2.0.pc)

@@ -38,6 +38,7 @@ option(USE_DLOPEN "" OFF)
 add_subdirectory(fcitx5-lua)
 
 add_subdirectory(libime)
+# suppress configure error
 install(TARGETS kenlm EXPORT LibIMECoreTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
 
 set(LIBIME_INSTALL_PKGDATADIR "../libime")
@@ -64,6 +65,7 @@ add_subdirectory(fcitx5-hangul)
 
 # rime
 # RIME_DATA_DIR is not actually used but must exist.
+set(Rime_VERSION 1.12)
 set(RIME_DATA_DIR "/usr/share/rime-data")
 set(Rime_dependencies
     "-L${PREBUILDER_LIB_DIR}"

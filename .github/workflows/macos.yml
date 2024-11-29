@@ -51,7 +51,7 @@ jobs:
       - name: Upload arch-specific artifact
         uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ matrix.arch }}
+          name: artifact-macos-${{ matrix.arch }}
           path: |
             build/macos-${{ matrix.arch }}/*-${{ matrix.arch }}.tar.bz2
 
@@ -59,7 +59,7 @@ jobs:
         if: ${{ matrix.os == 'macos-15' }}
         uses: actions/upload-artifact@v4
         with:
-          name: artifact
+          name: artifact-macos
           path: |
             build/macos-${{ matrix.arch }}/*-any.tar.bz2
 
@@ -73,7 +73,7 @@ jobs:
       - name: Upload meta-${{ matrix.arch }}.json
         uses: actions/upload-artifact@v4
         with:
-          name: meta-${{ matrix.arch }}.json
+          name: meta-macos-${{ matrix.arch }}.json
           path: |
             meta-${{ matrix.arch }}.json
 

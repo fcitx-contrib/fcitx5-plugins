@@ -73,7 +73,7 @@ jobs:
       - name: Upload meta-${{ matrix.arch }}.json
         uses: actions/upload-artifact@v4
         with:
-          name: meta-macos-${{ matrix.arch }}.json
+          name: artifact-macos-meta-${{ matrix.arch }}.json
           path: |
             meta-${{ matrix.arch }}.json
 
@@ -132,3 +132,5 @@ jobs:
           title: "macOS Build"
           files: |
             *.tar.bz2
+            meta-arm64.json
+            meta-x86_64.json

@@ -78,6 +78,14 @@ cp default.yaml $rime_dir
 popd > /dev/null
 cp -r $TARGET_DIR/usr/share/opencc $rime_dir
 
+# skk
+skk_share_dir=$TARGET_DIR/skk/usr/share
+mkdir -p $skk_share_dir/skk
+cp -r $TARGET_DIR/usr/share/libskk $skk_share_dir
+skk_dict=SKK-JISYO.L.gz
+[[ -f $ROOT/cache/$skk_dict ]] || wget -P $ROOT/cache https://skk-dev.github.io/dict/$skk_dict
+gunzip -fc $ROOT/cache/$skk_dict > $skk_share_dir/skk/SKK-JISYO.L
+
 if [[ $PLATFORM == "macos" ]]; then
   # split arch-specific files with data
   for plugin in "${plugins[@]}"; do

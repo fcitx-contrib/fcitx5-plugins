@@ -3,3 +3,4 @@ build
 cache/macos
 cache/js
 meta-*.json
+*.gz

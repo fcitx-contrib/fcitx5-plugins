@@ -1,0 +1,65 @@
+name: Compare
+
+on:
+  workflow_call:
+    inputs:
+      platform:
+        required: true
+        type: string
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download macos artifact
+        if: ${{ inputs.platform == 'macos' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact-macos
+          merge-multiple: true
+
+      - name: Compare content
+        run: |
+          # Must be first step so cwd is empty.
+          for file in $(ls); do
+            echo $file >> manifest
+          done
+          echo "# ${{ inputs.platform }} comparison" > summary.md
+          mkdir release
+          while read file; do
+            tar xjf $file plugin
+            cat plugin/*.json | jq > plugin/json
+            if wget -P release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/${{ inputs.platform }}/$file; then
+              echo "## $file" >> summary.md
+              tar xjf release/$file -C release plugin
+              cat release/plugin/*.json | jq > release/plugin/json
+              diff -u release/plugin/json plugin/json > json.diff || true
+              if [[ -s json.diff ]]; then
+                echo '```diff' >> summary.md
+                cat json.diff >> summary.md
+                echo '```' >> summary.md
+              else
+                echo "No difference." >> summary.md
+              fi
+            else
+              echo "## Content of new file $file:"
+              cat plugin/json
+            fi
+            rm -rf plugin release/plugin
+          done <manifest
+
+      - name: Find comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: "${{ inputs.platform }} comparison"
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body-path: summary.md
+          edit-mode: replace

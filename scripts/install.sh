@@ -48,6 +48,9 @@ for plugin in "${plugins[@]}"; do
     continue
   fi
   DESTDIR=$TARGET_DIR/$plugin cmake --install build/$TARGET/fcitx5-$plugin
+  rm -rf $TARGET_DIR/$plugin/usr/include
+  rm -rf $TARGET_DIR/$plugin/usr/lib/cmake
+  rm -rf $TARGET_DIR/$plugin/usr/share/{icons,metainfo} # only useful for linux
 done
 
 extract_dep anthy anthy-cmake
@@ -95,7 +98,6 @@ if [[ $PLATFORM == "macos" ]]; then
     pushd $TARGET_DIR/$plugin > /dev/null
     mkdir -p data
     rm -rf data/*
-    rm -rf usr/share/{icons,metainfo} # only useful for linux
     for dir in "include" "share"; do
       if [[ -d usr/$dir ]]; then
         mv usr/$dir data/$dir

@@ -84,6 +84,11 @@ jobs:
         uses: mxschmitt/action-tmate@v3
 
   compare:
+    uses: ./.github/workflows/compare.yml
+    with:
+      platform: macos
+
+  compare-arch:
     needs: build
     if: ${{ github.ref != 'refs/heads/master' }}
     runs-on: ubuntu-latest

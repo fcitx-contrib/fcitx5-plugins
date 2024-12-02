@@ -70,6 +70,7 @@ cp $CACHE_DIR/mozc_server$POSTFIX $MOZC_USR/lib/mozc/mozc_server
 chmod +x $MOZC_USR/lib/mozc/mozc_server
 cp $CACHE_DIR/mozc-addon.conf $MOZC_USR/share/fcitx5/addon/mozc.conf
 cp $CACHE_DIR/mozc.conf $MOZC_USR/share/fcitx5/inputmethod/mozc.conf
+strip -x $MOZC_USR/lib/fcitx5/libmozc.so $MOZC_USR/lib/mozc/mozc_server
 
 # rime
 rime_dir=$TARGET_DIR/rime/usr/share/rime-data

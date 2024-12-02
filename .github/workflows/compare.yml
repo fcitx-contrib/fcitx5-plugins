@@ -11,9 +11,6 @@ jobs:
   compare:
     runs-on: ubuntu-latest
     steps:
-      - name: Download release
-        run: wget -O release.tar.bz2 https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-arm64.tar.bz2
-
       - name: Download macos artifact
         if: ${{ inputs.platform == 'macos' }}
         uses: actions/download-artifact@v4
@@ -30,10 +27,12 @@ jobs:
           mkdir release
           while read file; do
             tar xjf $file plugin
+            cat plugin/*.json | jq > plugin/json
             if wget -P release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/${{ inputs.platform }}/$file; then
               echo "## $file comparison" >> summary.md
               tar xjf release/$file -C release plugin
-              diff -u release/plugin/*.json plugin/*.json > json.diff || true
+              cat release/plugin/*.json | jq > release/plugin/json
+              diff -u release/plugin/json plugin/json > json.diff || true
               if [[ -s json.diff ]]; then
                 echo '```diff' >> summary.md
                 cat json.diff >> summary.md
@@ -43,7 +42,7 @@ jobs:
               fi
             else
               echo "## Content of new file $file:"
-              cat plugin/*.json
+              cat plugin/json
             fi
             rm -rf plugin release/plugin
           done <manifest

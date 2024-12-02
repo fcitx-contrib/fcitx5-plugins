@@ -51,7 +51,7 @@ for plugin in "${plugins[@]}"; do
   rm -rf $TARGET_DIR/$plugin/usr/include
   rm -rf $TARGET_DIR/$plugin/usr/lib/cmake
   rm -rf $TARGET_DIR/$plugin/usr/share/{icons,metainfo} # only useful for linux
-  find $TARGET_DIR/$plugin/usr/lib/fcitx5 -name '*.so' -exec strip -x {} \;
+  find $TARGET_DIR/$plugin/usr -name '*.so' -exec strip -x {} \;
 done
 
 extract_dep anthy anthy-cmake

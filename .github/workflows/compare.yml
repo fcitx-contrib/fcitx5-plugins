@@ -30,7 +30,7 @@ jobs:
             tar xjf $file plugin
             cat plugin/*.json | jq > plugin/json
             if wget -P release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/${{ inputs.platform }}/$file; then
-              echo "## $file comparison" >> summary.md
+              echo "## $file" >> summary.md
               tar xjf release/$file -C release plugin
               cat release/plugin/*.json | jq > release/plugin/json
               diff -u release/plugin/json plugin/json > json.diff || true
@@ -63,7 +63,3 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body-path: summary.md
           edit-mode: replace
-
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3

@@ -20,10 +20,11 @@ jobs:
 
       - name: Compare content
         run: |
-          echo "# ${{ inputs.platform }} comparison" > summary.md
+          # Must be first step so cwd is empty.
           for file in $(ls); do
             echo $file >> manifest
           done
+          echo "# ${{ inputs.platform }} comparison" > summary.md
           mkdir release
           while read file; do
             tar xjf $file plugin

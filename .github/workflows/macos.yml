@@ -84,6 +84,7 @@ jobs:
         uses: mxschmitt/action-tmate@v3
 
   compare:
+    needs: build
     uses: ./.github/workflows/compare.yml
     with:
       platform: macos

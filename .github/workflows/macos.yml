@@ -45,7 +45,7 @@ jobs:
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-skk patches/skk.patch
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release
-          CGO_CFLAGS="-mmacosx-version-min=13" cmake --build build/macos-${{ matrix.arch }}
+          CGO_CFLAGS="-mmacosx-version-min=13" GOFLAGS="-ldflags=-buildid=" cmake --build build/macos-${{ matrix.arch }}
           ./scripts/install.sh macos
 
       - name: Upload arch-specific artifact

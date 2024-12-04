@@ -4,20 +4,22 @@ project(fcitx5-plugins VERSION 0.1.0)
 
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_INSTALL_PREFIX /usr)
+set(FIND_ROOT_PATH "${PROJECT_BINARY_DIR}/usr")
+set(PREBUILDER_INCLUDE_DIR "${FIND_ROOT_PATH}/include")
+set(PREBUILDER_LIB_DIR "${FIND_ROOT_PATH}/lib")
+set(ENV{PKG_CONFIG_SYSROOT_DIR} "${PROJECT_BINARY_DIR}")
+set(ENV{PKG_CONFIG_PATH} "${PREBUILDER_LIB_DIR}/pkgconfig")
+# We don't build testing frontends so fake it.
+set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 
 if (APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET 13) # Also need to update CGO_CFLAGS
 
     set(APP_CONTENTS_PATH "/Library/Input Methods/Fcitx5.app/Contents")
-    set(FIND_ROOT_PATH "${PROJECT_BINARY_DIR}/usr")
-    set(PREBUILDER_INCLUDE_DIR "${FIND_ROOT_PATH}/include")
-    set(PREBUILDER_LIB_DIR "${FIND_ROOT_PATH}/lib")
     set(CMAKE_FIND_ROOT_PATH
         "${APP_CONTENTS_PATH}"
         "${FIND_ROOT_PATH}"
     )
-    set(ENV{PKG_CONFIG_SYSROOT_DIR} "${PROJECT_BINARY_DIR}")
-    set(ENV{PKG_CONFIG_PATH} "${PREBUILDER_LIB_DIR}/pkgconfig")
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
@@ -78,17 +80,20 @@ set(Rime_dependencies
 )
 add_library(Rime_static STATIC IMPORTED)
 set_target_properties(Rime_static PROPERTIES
-    IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/librime.a" # plugins use __attribute__((constructor))
+    IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/librime.a"
     INTERFACE_INCLUDE_DIRECTORIES "${PREBUILDER_INCLUDE_DIR}"
     INTERFACE_LINK_LIBRARIES "${Rime_dependencies}"
 )
+# plugins use __attribute__((constructor))
 set(RIME_TARGET $<LINK_LIBRARY:WHOLE_ARCHIVE,Rime_static>)
 add_subdirectory(fcitx5-rime)
-target_link_options(rime PUBLIC
-    LINKER:-U,_f5m_is_linear_layout
-    LINKER:-U,_f5m_is_vertical_rl
-    LINKER:-U,_f5m_is_vertical_lr
-)
+if (APPLE)
+    target_link_options(rime PUBLIC
+        LINKER:-U,_f5m_is_linear_layout
+        LINKER:-U,_f5m_is_vertical_rl
+        LINKER:-U,_f5m_is_vertical_lr
+    )
+endif()
 
 # sayura
 add_subdirectory(fcitx5-sayura)

@@ -1,0 +1,90 @@
+name: JS build
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    env:
+      EMSCRIPTEN_VERSION: '3.1.71'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          sudo apt install -y ninja-build \
+            gettext \
+            marisa
+          ./scripts/install-deps.sh js
+          pip install dirhash
+
+      - name: Install Fcitx5 dev package
+        run: |
+          wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/latest/fcitx5-js-dev.tar.bz2
+          tar xjvf fcitx5-js-dev.tar.bz2 -C build/js/usr
+
+      - name: Install emsdk
+        run: |
+          git clone https://github.com/emscripten-core/emsdk
+          cd emsdk
+          ./emsdk install ${{ env.EMSCRIPTEN_VERSION }}
+          ./emsdk activate ${{ env.EMSCRIPTEN_VERSION }}
+
+      - name: Build
+        run: |
+          . emsdk/emsdk_env.sh
+          git apply --directory=libime patches/libime.patch
+          git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
+          emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/js
+          ./scripts/install.sh js
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-js
+          path: |
+            build/js/*.zip
+
+      - name: Check validity
+        run: |
+          python scripts/check-shared-files.py build/js/*/usr/plugin/*.json
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
+  compare:
+    needs: build
+    if: ${{ github.ref != 'refs/heads/master' }}
+    uses: ./.github/workflows/compare.yml
+    with:
+      platform: js
+
+  release:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact-js
+          merge-multiple: true
+
+      - name: Release
+        uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: js
+          prerelease: true
+          title: "JS Build"
+          files: |
+            *.zip

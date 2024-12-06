@@ -25,7 +25,20 @@ macos=(
 )
 
 js=(
+  anthy-cmake
+  boost
+  ecm
+  glog
+  leveldb
+  libchewing
+  libhangul
   librime
+  libthai
+  lua
+  marisa
+  opencc
+  yaml-cpp
+  zstd
 )
 
 . scripts/platform.sh $1
@@ -40,4 +53,6 @@ for dep in "${deps[@]}"; do
   tar xjf $CACHE_DIR/$file -C $EXTRACT_DIR
 done
 
+if [[ $PLATFORM == "macos" ]]; then
 sed -i.bak 's|Requires: glib-2.0.*|Requires: glib-2.0|' $(find build -name gobject-2.0.pc)
+fi

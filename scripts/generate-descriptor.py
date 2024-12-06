@@ -5,9 +5,9 @@ from dirhash import dirhash
 
 input_methods = sys.argv[1:]
 
-cwd = os.getcwd() # /path/to/rime/usr
+cwd = os.getcwd() # /path/to/build/target/rime/usr
 data_dir = f"{cwd}/../data"
-plugin = cwd.split("/")[-2]
+target, plugin = cwd.split("/")[-3:-1]
 files: list[str] = []
 
 for wd in (cwd, data_dir):
@@ -23,7 +23,10 @@ except Exception:
     # pure data plugin
     version = None
 
-data_version = dirhash(data_dir, "md5")
+if target.startswith('macos'):
+    data_version = dirhash(data_dir, "md5")
+else:
+    data_version = None
 
 # Both data/ and usr/ have to contain descriptor,
 # so that updating either *-any or *-arm64 will update descriptor.
@@ -34,9 +37,10 @@ os.makedirs(plugin_dir, exist_ok=True)
 descriptor_path = f"{plugin_dir}/{plugin}.json"
 with open(descriptor_path, "w") as f:
     descriptor = {
-        "data_version": data_version,
         "files": files
     }
+    if data_version:
+        descriptor["data_version"] = data_version
     if version:
         descriptor["version"] = version
     if input_methods:

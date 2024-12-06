@@ -4,3 +4,4 @@ cache/macos
 cache/js
 meta-*.json
 *.gz
+*.bz2

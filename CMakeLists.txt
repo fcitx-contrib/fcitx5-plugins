@@ -20,6 +20,18 @@ if (APPLE)
         "${APP_CONTENTS_PATH}"
         "${FIND_ROOT_PATH}"
     )
+elseif (EMSCRIPTEN)
+    list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/js")
+    set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
+    set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-sSIDE_MODULE")
+    set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-sSIDE_MODULE")
+    add_compile_options(-fPIC -fexceptions)
+    list(PREPEND CMAKE_FIND_ROOT_PATH "${FIND_ROOT_PATH}")
+    option(ENABLE_DATA "" OFF)
+    option(ENABLE_TOOLS "" OFF)
+    # TODO: remove once emscripten 3.1.74 is released
+    set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE "-Wl,--whole-archive" "<LINK_ITEM>" "-Wl,--no-whole-archive")
+    set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED True)
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
@@ -33,7 +45,9 @@ option(ENABLE_GUI "" OFF)
 add_subdirectory(fcitx5-anthy)
 
 # bamboo
+if (NOT EMSCRIPTEN) # https://github.com/golang/go/issues/55351
 add_subdirectory(fcitx5-bamboo)
+endif()
 
 # lua and chinese-addons
 option(USE_DLOPEN "" OFF)
@@ -46,9 +60,19 @@ install(TARGETS kenlm EXPORT LibIMECoreTargets LIBRARY DESTINATION "${CMAKE_INST
 set(LIBIME_INSTALL_PKGDATADIR "../libime")
 if (APPLE)
     set(CMAKE_INSTALL_RPATH "${APP_CONTENTS_PATH}/lib") # scel2org5
+elseif (EMSCRIPTEN)
+    option(ENABLE_CLOUDPINYIN "" OFF)
 endif()
 add_subdirectory(fcitx5-chinese-addons)
 target_link_libraries(chttrans "${PREBUILDER_LIB_DIR}/libmarisa.a")
+if (EMSCRIPTEN)
+    # Wherever exception is caught there must be explicit link option.
+    target_link_libraries(pinyin -fexceptions)
+    target_link_libraries(table -fexceptions)
+    target_link_libraries(chttrans -fexceptions)
+    target_link_libraries(pinyinhelper -fexceptions)
+    target_link_libraries(punctuation -fexceptions)
+endif()
 
 # chewing
 add_subdirectory(fcitx5-chewing)
@@ -66,8 +90,8 @@ set(HANGUL_TARGET Hangul_static)
 add_subdirectory(fcitx5-hangul)
 
 # rime
-# RIME_DATA_DIR is not actually used but must exist.
 set(Rime_VERSION 1.12)
+# RIME_DATA_DIR is not actually used on macOS but must exist.
 set(RIME_DATA_DIR "/usr/share/rime-data")
 set(Rime_dependencies
     "-L${PREBUILDER_LIB_DIR}"
@@ -98,14 +122,18 @@ endif()
 # sayura
 add_subdirectory(fcitx5-sayura)
 
+if (NOT EMSCRIPTEN)
 # skk
 set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/SKK-JISYO.L" CACHE STRING "")
 add_subdirectory(fcitx5-skk)
 target_include_directories(skk PRIVATE "${PREBUILDER_INCLUDE_DIR}/gee-0.8")
 target_link_libraries(skk "-L${PREBUILDER_LIB_DIR}" -lgee-0.8 -lffi -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lz -lresolv)
+endif()
 
 # table-extra
-add_subdirectory(fcitx5-table-extra)
+if (APPLE) # Universal so unnecessary on other platforms.
+    add_subdirectory(fcitx5-table-extra)
+endif()
 
 # thai
 add_library(Thai_static STATIC IMPORTED)

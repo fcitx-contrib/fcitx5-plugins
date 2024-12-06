@@ -28,3 +28,8 @@ jobs:
     if: "!contains(github.event.head_commit.message, '!macos')"
     needs: lint
     uses: ./.github/workflows/macos.yml
+
+  js:
+    if: "!contains(github.event.head_commit.message, '!js')"
+    needs: lint
+    uses: ./.github/workflows/js.yml

@@ -25,7 +25,20 @@ macos=(
 )
 
 js=(
+  anthy-cmake
+  boost
+  ecm
+  glog
+  leveldb
+  libchewing
+  libhangul
   librime
+  libthai
+  lua
+  marisa
+  opencc
+  yaml-cpp
+  zstd
 )
 
 . scripts/platform.sh $1

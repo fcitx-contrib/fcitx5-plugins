@@ -11,11 +11,10 @@ jobs:
   compare:
     runs-on: ubuntu-latest
     steps:
-      - name: Download macos artifact
-        if: ${{ inputs.platform == 'macos' }}
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifact-macos
+          name: artifact-${{ inputs.platform }}
           merge-multiple: true
 
       - name: Compare content
@@ -27,11 +26,11 @@ jobs:
           echo "# ${{ inputs.platform }} comparison" > summary.md
           mkdir release
           while read file; do
-            tar xjf $file plugin
+            tar xf $file plugin
             cat plugin/*.json | jq > plugin/json
             if wget -P release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/${{ inputs.platform }}/$file; then
               echo "## $file" >> summary.md
-              tar xjf release/$file -C release plugin
+              tar xf release/$file -C release plugin
               cat release/plugin/*.json | jq > release/plugin/json
               diff -u release/plugin/json plugin/json > json.diff || true
               if [[ -s json.diff ]]; then

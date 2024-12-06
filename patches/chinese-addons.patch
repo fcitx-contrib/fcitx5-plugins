@@ -1,0 +1,167 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd4ce71..7edd738 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,6 @@ fcitx5_add_i18n_definition()
+ add_subdirectory(modules)
+ add_subdirectory(im)
+ add_subdirectory(po)
+-add_subdirectory(tools)
+ 
+ if (ENABLE_GUI)
+     add_subdirectory(gui)
+diff --git a/im/pinyin/CMakeLists.txt b/im/pinyin/CMakeLists.txt
+index 4caf30b..8ca2805 100644
+--- a/im/pinyin/CMakeLists.txt
++++ b/im/pinyin/CMakeLists.txt
+@@ -8,7 +8,7 @@ set(PINYIN_SOURCES
+ )
+ 
+ add_library(pinyin MODULE ${PINYIN_SOURCES})
+-target_link_libraries(pinyin Fcitx5::Core Fcitx5::Config LibIME::Pinyin Boost::iostreams Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::Notifications Fcitx5::Module::Spell Fcitx5::Module::PinyinHelper Pthread::Pthread ${FMT_TARGET})
++target_link_libraries(pinyin Fcitx5::Core Fcitx5::Config LibIME::Pinyin Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::Notifications Fcitx5::Module::Spell Fcitx5::Module::PinyinHelper Pthread::Pthread ${FMT_TARGET})
+ 
+ if (TARGET Fcitx5::Module::LuaAddonLoader)
+     target_compile_definitions(pinyin PRIVATE -DFCITX_HAS_LUA)
+diff --git a/im/pinyin/pinyin.cpp b/im/pinyin/pinyin.cpp
+index 1743dc0..3e24cd5 100644
+--- a/im/pinyin/pinyin.cpp
++++ b/im/pinyin/pinyin.cpp
+@@ -673,8 +673,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
+ 
+ PinyinEngine::PinyinEngine(Instance *instance)
+     : instance_(instance),
+-      factory_([this](InputContext &) { return new PinyinState(this); }),
+-      worker_(instance->eventDispatcher()) {
++      factory_([this](InputContext &) { return new PinyinState(this); }) {
+     ime_ = std::make_unique<libime::PinyinIME>(
+         std::make_unique<libime::PinyinDictionary>(),
+         std::make_unique<libime::UserLanguageModel>(
+@@ -843,25 +842,18 @@ void PinyinEngine::loadDict(const std::string &fullPath,
+     }
+     ime_->dict()->addEmptyDict();
+     PINYIN_DEBUG() << "Loading pinyin dict " << fullPath;
+-    std::packaged_task<libime::PinyinDictionary::TrieType()> task([fullPath]() {
+-        std::ifstream in(fullPath, std::ios::in | std::ios::binary);
+-        auto trie = libime::PinyinDictionary::load(
+-            in, libime::PinyinDictFormat::Binary);
+-        return trie;
+-    });
+-    taskTokens.push_back(worker_.addTask(
+-        std::move(task),
+-        [this, index = ime_->dict()->dictSize() - 1, fullPath](
+-            std::shared_future<libime::PinyinDictionary::TrieType> &future) {
+-            try {
+-                PINYIN_DEBUG()
+-                    << "Load pinyin dict " << fullPath << " finished.";
+-                ime_->dict()->setTrie(index, future.get());
+-            } catch (const std::exception &e) {
+-                PINYIN_ERROR() << "Failed to load pinyin dict " << fullPath
+-                               << ": " << e.what();
+-            }
+-        }));
++    std::ifstream in(fullPath, std::ios::in | std::ios::binary);
++    auto trie = libime::PinyinDictionary::load(
++        in, libime::PinyinDictFormat::Binary);
++    auto index = ime_->dict()->dictSize() - 1;
++    try {
++        PINYIN_DEBUG()
++            << "Load pinyin dict " << fullPath << " finished.";
++        ime_->dict()->setTrie(index, trie);
++    } catch (const std::exception &e) {
++        PINYIN_ERROR() << "Failed to load pinyin dict " << fullPath
++                        << ": " << e.what();
++    }
+ }
+ 
+ void PinyinEngine::loadBuiltInDict() {
+diff --git a/im/pinyin/pinyin.h b/im/pinyin/pinyin.h
+index 99854e4..007e52e 100644
+--- a/im/pinyin/pinyin.h
++++ b/im/pinyin/pinyin.h
+@@ -446,7 +446,6 @@ private:
+     std::unique_ptr<HandlerTableEntry<EventHandler>> event_;
+     CustomPhraseDict customPhrase_;
+     SymbolDict symbols_;
+-    WorkerThread worker_;
+     std::list<std::unique_ptr<TaskToken>> persistentTask_;
+     std::list<std::unique_ptr<TaskToken>> tasks_;
+ 
+diff --git a/im/table/CMakeLists.txt b/im/table/CMakeLists.txt
+index 7c930e9..d00a1ca 100644
+--- a/im/table/CMakeLists.txt
++++ b/im/table/CMakeLists.txt
+@@ -7,7 +7,7 @@ set(TABLE_SOURCES
+     factory.cpp
+ )
+ add_library(table MODULE ${TABLE_SOURCES})
+-target_link_libraries(table Fcitx5::Core Fcitx5::Config LibIME::Table LibIME::Pinyin Boost::iostreams Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::PinyinHelper ${FMT_TARGET})
++target_link_libraries(table Fcitx5::Core Fcitx5::Config LibIME::Table LibIME::Pinyin Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::PinyinHelper ${FMT_TARGET})
+ target_compile_definitions(table PRIVATE FCITX_STRINGUTILS_ENABLE_BOOST_STRING_VIEW)
+ install(TARGETS table DESTINATION "${CMAKE_INSTALL_LIBDIR}/fcitx5")
+ configure_file(table.conf.in.in table.conf.in)
+diff --git a/modules/pinyinhelper/CMakeLists.txt b/modules/pinyinhelper/CMakeLists.txt
+index a2ca5d9..d038179 100644
+--- a/modules/pinyinhelper/CMakeLists.txt
++++ b/modules/pinyinhelper/CMakeLists.txt
+@@ -8,7 +8,6 @@ target_link_libraries(pinyinhelper
+ Fcitx5::Core 
+ Fcitx5::Config
+ LibIME::Core
+-Boost::iostreams
+ Fcitx5::Module::QuickPhrase
+ Fcitx5::Module::Clipboard
+ Pthread::Pthread
+diff --git a/modules/pinyinhelper/stroke.cpp b/modules/pinyinhelper/stroke.cpp
+index 2e1dffa..4f8129e 100644
+--- a/modules/pinyinhelper/stroke.cpp
++++ b/modules/pinyinhelper/stroke.cpp
+@@ -25,11 +25,11 @@ namespace fcitx {
+ Stroke::Stroke() {}
+ 
+ void Stroke::loadAsync() {
+-    if (loadFuture_.valid()) {
++    if (loaded_) {
+         return;
+     }
+ 
+-    loadFuture_ = std::async(std::launch::async, []() {
++    loadFuture_ = ([]() {
+         std::tuple<libime::DATrie<int32_t>, libime::DATrie<int32_t>> result;
+         auto &dict = std::get<0>(result);
+         auto &reverseDict = std::get<1>(result);
+@@ -80,18 +80,16 @@ void Stroke::loadAsync() {
+         reverseDict.shrink_tail();
+ 
+         return result;
+-    });
++    })();
+ }
+ 
+ bool Stroke::load() {
+     if (loaded_) {
+         return loadResult_;
+     }
+-    if (!loadFuture_.valid()) {
+-        loadAsync();
+-    }
++    loadAsync();
+     try {
+-        std::tie(dict_, revserseDict_) = loadFuture_.get();
++        std::tie(dict_, revserseDict_) = loadFuture_;
+         loadResult_ = true;
+     } catch (...) {
+         loadResult_ = false;
+diff --git a/modules/pinyinhelper/stroke.h b/modules/pinyinhelper/stroke.h
+index 048e2a0..009c496 100644
+--- a/modules/pinyinhelper/stroke.h
++++ b/modules/pinyinhelper/stroke.h
+@@ -33,7 +33,7 @@ private:
+     bool loaded_ = false;
+     bool loadResult_ = false;
+ 
+-    std::future<std::tuple<libime::DATrie<int32_t>, libime::DATrie<int32_t>>>
++    std::tuple<libime::DATrie<int32_t>, libime::DATrie<int32_t>>
+         loadFuture_;
+ };
+ } // namespace fcitx

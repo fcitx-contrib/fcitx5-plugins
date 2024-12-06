@@ -28,7 +28,7 @@ jobs:
       - name: Install Fcitx5 dev package
         run: |
           wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/latest/fcitx5-js-dev.tar.bz2
-          tar xjvf fcitx5-js-dev.tar.bz2 -C build/sysroot/usr
+          tar xjvf fcitx5-js-dev.tar.bz2 -C build/js/usr
 
       - name: Install emsdk
         run: |

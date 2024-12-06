@@ -62,3 +62,7 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body-path: summary.md
           edit-mode: replace
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3

@@ -5,9 +5,9 @@ from dirhash import dirhash
 
 input_methods = sys.argv[1:]
 
-cwd = os.getcwd() # /path/to/build/platform/rime/usr
+cwd = os.getcwd() # /path/to/build/target/rime/usr
 data_dir = f"{cwd}/../data"
-platform, plugin = cwd.split("/")[-3:-1]
+target, plugin = cwd.split("/")[-3:-1]
 files: list[str] = []
 
 for wd in (cwd, data_dir):
@@ -23,7 +23,7 @@ except Exception:
     # pure data plugin
     version = None
 
-if platform == 'macos':
+if target.startswith('macos'):
     data_version = dirhash(data_dir, "md5")
 else:
     data_version = None

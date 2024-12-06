@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install bsdtar
-        run: sudo apt install -y libarchive-tools
+        run: |
+          sudo apt install -y libarchive-tools
+          sudo ln -s /usr/bin/bsdtar /usr/bin/tar
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -22,7 +24,6 @@ jobs:
 
       - name: Compare content
         run: |
-          alias tar=bsdtar # works for zip too
           # Must be first step so cwd is empty.
           for file in $(ls); do
             echo $file >> manifest

@@ -11,13 +11,13 @@ index bd4ce71..7edd738 100644
  if (ENABLE_GUI)
      add_subdirectory(gui)
 diff --git a/im/pinyin/CMakeLists.txt b/im/pinyin/CMakeLists.txt
-index 4caf30b..8ca2805 100644
+index 341a439..02f748e 100644
 --- a/im/pinyin/CMakeLists.txt
 +++ b/im/pinyin/CMakeLists.txt
 @@ -8,7 +8,7 @@ set(PINYIN_SOURCES
  )
  
- add_library(pinyin MODULE ${PINYIN_SOURCES})
+ add_fcitx5_addon(pinyin ${PINYIN_SOURCES})
 -target_link_libraries(pinyin Fcitx5::Core Fcitx5::Config LibIME::Pinyin Boost::iostreams Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::Notifications Fcitx5::Module::Spell Fcitx5::Module::PinyinHelper Pthread::Pthread ${FMT_TARGET})
 +target_link_libraries(pinyin Fcitx5::Core Fcitx5::Config LibIME::Pinyin Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::Notifications Fcitx5::Module::Spell Fcitx5::Module::PinyinHelper Pthread::Pthread ${FMT_TARGET})
  
@@ -88,20 +88,20 @@ index 99854e4..007e52e 100644
      std::list<std::unique_ptr<TaskToken>> tasks_;
  
 diff --git a/im/table/CMakeLists.txt b/im/table/CMakeLists.txt
-index 7c930e9..d00a1ca 100644
+index 9a83e7d..7bbdc25 100644
 --- a/im/table/CMakeLists.txt
 +++ b/im/table/CMakeLists.txt
 @@ -7,7 +7,7 @@ set(TABLE_SOURCES
      factory.cpp
  )
- add_library(table MODULE ${TABLE_SOURCES})
+ add_fcitx5_addon(table ${TABLE_SOURCES})
 -target_link_libraries(table Fcitx5::Core Fcitx5::Config LibIME::Table LibIME::Pinyin Boost::iostreams Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::PinyinHelper ${FMT_TARGET})
 +target_link_libraries(table Fcitx5::Core Fcitx5::Config LibIME::Table LibIME::Pinyin Fcitx5::Module::Punctuation Fcitx5::Module::QuickPhrase Fcitx5::Module::PinyinHelper ${FMT_TARGET})
  target_compile_definitions(table PRIVATE FCITX_STRINGUTILS_ENABLE_BOOST_STRING_VIEW)
  install(TARGETS table DESTINATION "${CMAKE_INSTALL_LIBDIR}/fcitx5")
  configure_file(table.conf.in.in table.conf.in)
 diff --git a/modules/pinyinhelper/CMakeLists.txt b/modules/pinyinhelper/CMakeLists.txt
-index a2ca5d9..d038179 100644
+index 30a2a99..211ac5d 100644
 --- a/modules/pinyinhelper/CMakeLists.txt
 +++ b/modules/pinyinhelper/CMakeLists.txt
 @@ -8,7 +8,6 @@ target_link_libraries(pinyinhelper

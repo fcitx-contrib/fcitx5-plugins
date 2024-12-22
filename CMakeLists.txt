@@ -50,9 +50,8 @@ endif()
 option(USE_DLOPEN "" OFF)
 add_subdirectory(fcitx5-lua)
 
-set(BUILD_SHARED_LIBS OFF)
+option(BUILD_SHARED_LIBS "" OFF)
 add_subdirectory(libime)
-set(BUILD_SHARED_LIBS ON)
 # suppress configure error
 install(TARGETS kenlm EXPORT LibIMECoreTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
 

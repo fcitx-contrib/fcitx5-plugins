@@ -33,6 +33,7 @@ js=(
   leveldb
   libchewing
   libhangul
+  libmozc
   librime
   libthai
   lua

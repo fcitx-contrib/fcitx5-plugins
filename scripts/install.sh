@@ -24,6 +24,7 @@ js=(
   hallelujah
   hangul
   lua
+  mozc
   rime
   sayura
   thai
@@ -138,6 +139,7 @@ package chinese-addons pinyin
 package hallelujah hallelujah
 package hangul hangul
 package lua
+package mozc mozc
 package rime rime
 package sayura sayura
 package thai libthai
@@ -145,7 +147,6 @@ package unikey unikey
 
 if [[ $PLATFORM == "macos" ]]; then
   package bamboo bamboo
-  package mozc mozc
   package skk skk
 
   # table-extra

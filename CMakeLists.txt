@@ -94,10 +94,18 @@ set(MOZC_TARGET
     "-lutf8_validity"
     "-lprotobuf"
     "-labsl"
-    "-Wl,-framework,CoreFoundation"
 )
+if (APPLE)
+    list(APPEND MOZC_TARGET "-Wl,-framework,CoreFoundation")
+endif()
 add_subdirectory(fcitx5-mozc)
 target_include_directories(mozc PRIVATE "${PREBUILDER_INCLUDE_DIR}/mozc")
+if (EMSCRIPTEN)
+    target_include_directories(mozc PRIVATE
+        "${PREBUILDER_INCLUDE_DIR}"
+        "${PREBUILDER_INCLUDE_DIR}/Fcitx5/Module"
+    )
+endif()
 
 # rime
 set(Rime_VERSION 1.12)

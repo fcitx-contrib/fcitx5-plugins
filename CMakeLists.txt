@@ -87,6 +87,18 @@ set_target_properties(Hangul_static PROPERTIES
 set(HANGUL_TARGET Hangul_static)
 add_subdirectory(fcitx5-hangul)
 
+# mozc
+set(MOZC_TARGET
+    "-L${PREBUILDER_LIB_DIR}"
+    "-lmozc-static"
+    "-lutf8_validity"
+    "-lprotobuf"
+    "-labsl"
+    "-Wl,-framework,CoreFoundation"
+)
+add_subdirectory(fcitx5-mozc)
+target_include_directories(mozc PRIVATE "${PREBUILDER_INCLUDE_DIR}/mozc")
+
 # rime
 set(Rime_VERSION 1.12)
 # RIME_DATA_DIR is not actually used on macOS but must exist.

@@ -12,6 +12,7 @@ macos=(
   libchewing
   libgee
   libhangul
+  libmozc
   librime
   libskk
   libthai

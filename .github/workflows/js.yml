@@ -22,7 +22,7 @@ jobs:
         with:
           submodules: recursive
           repository: google/mozc
-          path: libmozc/mozc
+          path: fcitx5-mozc/mozc
           ref: ${{ inputs.mozc_sha }}
 
       - uses: actions/setup-python@v5

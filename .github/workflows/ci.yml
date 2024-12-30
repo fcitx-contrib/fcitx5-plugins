@@ -6,9 +6,14 @@ on:
       - master
   pull_request:
 
+env:
+  MOZC_SHA: ad0e97b8b8dcfd4c841a02c5d6a043fb5e741405
+
 jobs:
   lint:
     runs-on: ubuntu-latest
+    outputs:
+      MOZC_SHA: ${{ env.MOZC_SHA }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,8 +33,12 @@ jobs:
     if: "!contains(github.event.head_commit.message, '!macos')"
     needs: lint
     uses: ./.github/workflows/macos.yml
+    with:
+      mozc_sha: ${{ needs.lint.outputs.MOZC_SHA }}
 
   js:
     if: "!contains(github.event.head_commit.message, '!js')"
     needs: lint
     uses: ./.github/workflows/js.yml
+    with:
+      mozc_sha: ${{ needs.lint.outputs.MOZC_SHA }}

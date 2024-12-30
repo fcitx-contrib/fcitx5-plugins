@@ -2,6 +2,11 @@ name: JS build
 
 on:
   workflow_call:
+    inputs:
+      mozc_sha:
+        description: "Commit SHA of google/mozc"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -12,6 +17,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          repository: google/mozc
+          path: libmozc/mozc
+          ref: ${{ inputs.mozc_sha }}
 
       - uses: actions/setup-python@v5
         with:

@@ -22,6 +22,9 @@
 [submodule "fcitx5-lua"]
 	path = fcitx5-lua
 	url = https://github.com/fcitx/fcitx5-lua
+[submodule "fcitx5-mozc"]
+	path = fcitx5-mozc
+	url = https://github.com/fcitx-contrib/fcitx5-mozc
 [submodule "fcitx5-rime"]
 	path = fcitx5-rime
 	url = https://github.com/fcitx/fcitx5-rime

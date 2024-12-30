@@ -24,6 +24,7 @@ js=(
   hallelujah
   hangul
   lua
+  mozc
   rime
   sayura
   thai
@@ -63,9 +64,6 @@ package() {
 }
 
 for plugin in "${plugins[@]}"; do
-  if [[ $plugin == "mozc" ]]; then
-    continue
-  fi
   DESTDIR=$TARGET_DIR/$plugin cmake --install build/$TARGET/fcitx5-$plugin
   rm -rf $TARGET_DIR/$plugin/usr/include
   rm -rf $TARGET_DIR/$plugin/usr/lib/cmake
@@ -85,21 +83,6 @@ else
   tar xjf $ROOT/cache/$file -C $TARGET_DIR/chinese-addons/usr lib/libime share/fcitx5/pinyin share/libime share/opencc
 fi
 extract_dep hangul libhangul
-
-# mozc
-if [[ $PLATFORM == "macos" ]]; then
-MOZC_USR=$TARGET_DIR/mozc/usr
-mkdir -p $MOZC_USR/{lib/{fcitx5,mozc},share/fcitx5/{addon,inputmethod}}
-for file in libmozc$POSTFIX.so mozc_server$POSTFIX mozc-addon.conf mozc.conf; do
-  [[ -f $CACHE_DIR/$file ]] || wget -P $CACHE_DIR https://github.com/fcitx-contrib/mozc-cmake/releases/download/latest/$file
-done
-cp $CACHE_DIR/libmozc$POSTFIX.so $MOZC_USR/lib/fcitx5/libmozc.so
-cp $CACHE_DIR/mozc_server$POSTFIX $MOZC_USR/lib/mozc/mozc_server
-chmod +x $MOZC_USR/lib/mozc/mozc_server
-cp $CACHE_DIR/mozc-addon.conf $MOZC_USR/share/fcitx5/addon/mozc.conf
-cp $CACHE_DIR/mozc.conf $MOZC_USR/share/fcitx5/inputmethod/mozc.conf
-strip -x $MOZC_USR/lib/fcitx5/libmozc.so $MOZC_USR/lib/mozc/mozc_server
-fi
 
 # rime
 rime_dir=$TARGET_DIR/rime/usr/share/rime-data
@@ -156,6 +139,7 @@ package chinese-addons pinyin
 package hallelujah hallelujah
 package hangul hangul
 package lua
+package mozc mozc
 package rime rime
 package sayura sayura
 package thai libthai
@@ -163,7 +147,6 @@ package unikey unikey
 
 if [[ $PLATFORM == "macos" ]]; then
   package bamboo bamboo
-  package mozc mozc
   package skk skk
 
   # table-extra

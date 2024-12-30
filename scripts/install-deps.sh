@@ -12,6 +12,7 @@ macos=(
   libchewing
   libgee
   libhangul
+  libmozc
   librime
   libskk
   libthai
@@ -32,6 +33,7 @@ js=(
   leveldb
   libchewing
   libhangul
+  libmozc
   librime
   libthai
   lua

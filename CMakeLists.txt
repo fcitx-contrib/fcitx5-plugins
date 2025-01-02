@@ -2,6 +2,20 @@ cmake_minimum_required(VERSION 3.27)
 
 project(fcitx5-plugins VERSION 0.1.0)
 
+option(ANTHY "" ON)
+option(BAMBOO "" ON)
+option(CHEWING "" ON)
+option(CHINESE_ADDONS "" ON)
+option(HALLELUJAH "" ON)
+option(HANGUL "" ON)
+option(MOZC "" ON)
+option(RIME "" ON)
+option(SAYURA "" ON)
+option(SKK "" ON)
+option(TABLE_EXTRA "" ON)
+option(THAI "" ON)
+option(UNIKEY "" ON)
+
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_INSTALL_PREFIX /usr)
 set(FIND_ROOT_PATH "${PROJECT_BINARY_DIR}/usr")
@@ -39,14 +53,24 @@ option(ENABLE_QT "" OFF)
 option(ENABLE_GUI "" OFF)
 
 # anthy
+if (ANTHY)
 add_subdirectory(fcitx5-anthy)
+endif()
 
 # bamboo
+if (BAMBOO)
 if (NOT EMSCRIPTEN) # https://github.com/golang/go/issues/55351
 add_subdirectory(fcitx5-bamboo)
 endif()
+endif()
+
+# chewing
+if (CHEWING)
+add_subdirectory(fcitx5-chewing)
+endif()
 
 # lua and chinese-addons
+if (CHINESE_ADDONS)
 option(USE_DLOPEN "" OFF)
 add_subdirectory(fcitx5-lua)
 
@@ -71,14 +95,15 @@ if (EMSCRIPTEN)
     target_link_libraries(pinyinhelper -fexceptions)
     target_link_libraries(punctuation -fexceptions)
 endif()
-
-# chewing
-add_subdirectory(fcitx5-chewing)
+endif()
 
 # hallelujah
+if (HALLELUJAH)
 add_subdirectory(fcitx5-hallelujah)
+endif()
 
 # hangul
+if (HANGUL)
 add_library(Hangul_static STATIC IMPORTED)
 set_target_properties(Hangul_static PROPERTIES
     IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/libhangul.a"
@@ -86,8 +111,10 @@ set_target_properties(Hangul_static PROPERTIES
 )
 set(HANGUL_TARGET Hangul_static)
 add_subdirectory(fcitx5-hangul)
+endif()
 
 # mozc
+if (MOZC)
 set(MOZC_TARGET
     "-L${PREBUILDER_LIB_DIR}"
     "-lmozc-static"
@@ -106,8 +133,10 @@ if (EMSCRIPTEN)
         "${PREBUILDER_INCLUDE_DIR}/Fcitx5/Module"
     )
 endif()
+endif()
 
 # rime
+if (RIME)
 set(Rime_VERSION 1.12)
 # RIME_DATA_DIR is not actually used on macOS but must exist.
 set(RIME_DATA_DIR "/usr/share/rime-data")
@@ -136,24 +165,32 @@ if (APPLE)
         LINKER:-U,_f5m_is_vertical_lr
     )
 endif()
+endif()
 
 # sayura
+if (SAYURA)
 add_subdirectory(fcitx5-sayura)
+endif()
 
-if (NOT EMSCRIPTEN)
 # skk
+if (SKK)
+if (NOT EMSCRIPTEN)
 set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/SKK-JISYO.L" CACHE STRING "")
 add_subdirectory(fcitx5-skk)
 target_include_directories(skk PRIVATE "${PREBUILDER_INCLUDE_DIR}/gee-0.8")
 target_link_libraries(skk "-L${PREBUILDER_LIB_DIR}" -lgee-0.8 -lffi -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lz -lresolv)
 endif()
+endif()
 
 # table-extra
+if (TABLE_EXTRA)
 if (APPLE) # Universal so unnecessary on other platforms.
     add_subdirectory(fcitx5-table-extra)
 endif()
+endif()
 
 # thai
+if (THAI)
 add_library(Thai_static STATIC IMPORTED)
 set_target_properties(Thai_static PROPERTIES
     IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/libthai.a"
@@ -161,6 +198,9 @@ set_target_properties(Thai_static PROPERTIES
 )
 set(THAI_TARGET Thai_static)
 add_subdirectory(fcitx5-thai)
+endif()
 
 # unikey
+if (UNIKEY)
 add_subdirectory(fcitx5-unikey)
+endif()

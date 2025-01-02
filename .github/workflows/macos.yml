@@ -50,7 +50,7 @@ jobs:
       - name: Install Fcitx5 dev package
         run: |
           wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
-          sudo tar xjvf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
+          sudo tar xjf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
 
       - name: Build
         run: |

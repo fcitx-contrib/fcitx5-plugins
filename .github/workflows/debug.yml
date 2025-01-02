@@ -1,0 +1,79 @@
+name: macOS debug build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-13]
+        include:
+          - { os: macos-15, arch: arm64 }
+          - { os: macos-13, arch: x86_64 }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        env:
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+        run: |
+          brew install \
+            extra-cmake-modules \
+            ninja
+          ./scripts/install-deps.sh macos
+          rm cache/macos/librime-${{ matrix.arch }}.tar.bz2 # wget will append .1 if file already exists.
+          wget -P cache/macos https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/debug/librime-${{ matrix.arch }}.tar.bz2
+          tar xjf cache/macos/librime-${{ matrix.arch }}.tar.bz2 -C build/macos-${{ matrix.arch }}/usr
+
+      - name: Install Fcitx5 dev package
+        run: |
+          wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
+          sudo tar xjf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
+
+      - name: Build
+        run: |
+          git submodule update --init fcitx5-rime
+          cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+            -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DHALLELUJAH=OFF -DHANGUL=OFF -DMOZC=OFF -DSAYURA=OFF -DSKK=OFF -DTABLE_EXTRA=OFF -DTHAI=OFF -DUNIKEY=OFF
+          cmake --build build/macos-${{ matrix.arch }} --target rime
+          wget -P cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos/rime-${{ matrix.arch }}.tar.bz2
+          mkdir build/rime
+          tar xjf cache/rime-${{ matrix.arch }}.tar.bz2 -C build/rime
+          mv build/macos-${{ matrix.arch }}/fcitx5-rime/src/librime.so build/rime/lib/fcitx5
+          cd build/rime
+          tar cjf ../../rime-${{ matrix.arch }}.tar.bz2 --no-xattrs *
+
+      - name: Upload arch-specific artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-rime-${{ matrix.arch }}
+          path: |
+            rime-${{ matrix.arch }}.tar.bz2
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-rime*
+          merge-multiple: true
+
+      - name: Release
+        uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: debug
+          prerelease: true
+          title: "Debug Build"
+          files: |
+            *.tar.bz2

@@ -29,7 +29,9 @@ js=(
   anthy-cmake
   boost
   ecm
+  fmt
   glog
+  json-c
   leveldb
   libchewing
   libhangul

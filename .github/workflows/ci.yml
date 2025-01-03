@@ -5,6 +5,7 @@ on:
     branches:
       - master
   pull_request:
+  workflow_dispatch:
 
 env:
   MOZC_SHA: ad0e97b8b8dcfd4c841a02c5d6a043fb5e741405

@@ -31,6 +31,7 @@ js=(
   ecm
   fmt
   glog
+  json-c
   leveldb
   libchewing
   libhangul

@@ -29,6 +29,7 @@ js=(
   anthy-cmake
   boost
   ecm
+  fmt
   glog
   leveldb
   libchewing

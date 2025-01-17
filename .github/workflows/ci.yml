@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       MOZC_SHA: ${{ env.MOZC_SHA }}
+      message: ${{ steps.commit-message.outputs.message }}
     steps:
       - uses: actions/checkout@v4
 

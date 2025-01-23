@@ -17,6 +17,8 @@ for wd in (cwd, data_dir):
         for filename in filenames:
             files.append(f"{dirpath[len(wd) + 1:]}/{filename}")
 
+files.sort()
+
 try:
     version = dirhash(cwd, "md5", ignore=["plugin"])
 except Exception:

@@ -44,9 +44,8 @@ jobs:
           pip install dirhash
 
       - name: Install Fcitx5 dev package
-        shell: bash
         run: |
-          wget https://github.com/fcitx-contrib/fcitx5-windows/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
+          aria2c https://github.com/fcitx-contrib/fcitx5-windows/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
           mkdir -p build/windows-${{ matrix.arch }}/usr
           tar xf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C build/windows-${{ matrix.arch }}/usr
 

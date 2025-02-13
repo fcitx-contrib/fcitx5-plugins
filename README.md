@@ -1,7 +1,8 @@
 # Fcitx5 plugins
 
 Build plugins for
-[fcitx5-macos](https://github.com/fcitx-contrib/fcitx5-macos) and
+[fcitx5-macos](https://github.com/fcitx-contrib/fcitx5-macos),
+[fcitx5-windows](https://github.com/fcitx-contrib/fcitx5-windows) and
 [fcitx5-js](https://github.com/fcitx-contrib/fcitx5-js).
 
 ## Plugins

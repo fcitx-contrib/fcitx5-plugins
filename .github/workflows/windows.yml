@@ -1,0 +1,112 @@
+name: Windows build
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, arm64]
+        include:
+          - { arch: x86_64, cmake_arch: AMD64, pkg_arch: x86_64  }
+          - { arch: arm64, cmake_arch: ARM64, pkg_arch: aarch64 }
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          C:/msys64/usr/bin/pacman -Syu --noconfirm
+          C:/msys64/usr/bin/pacman -S --noconfirm `
+            mingw-w64-clang-${{ matrix.pkg_arch }}-extra-cmake-modules `
+            mingw-w64-clang-${{ matrix.pkg_arch }}-fmt `
+            mingw-w64-clang-${{ matrix.pkg_arch }}-json-c `
+            mingw-w64-clang-${{ matrix.pkg_arch }}-libthai `
+            mingw-w64-clang-x86_64-clang `
+            mingw-w64-clang-x86_64-cmake `
+            mingw-w64-clang-x86_64-marisa `
+            mingw-w64-clang-x86_64-ninja `
+            mingw-w64-clang-x86_64-pkgconf `
+            gettext
+          if ("${{ matrix.arch }}" -eq "arm64") {
+            C:/msys64/usr/bin/pacman -S --noconfirm `
+              mingw-w64-clang-aarch64-clang `
+              mingw-w64-clang-aarch64-marisa
+          }
+          mkdir -p C:/msys64/usr/share/gettext
+          cp -r windows-cross/its C:/msys64/usr/share/gettext
+          Add-Content $env:GITHUB_PATH "C:/msys64/clang64/bin"
+          pip install dirhash
+
+      - name: Install Fcitx5 dev package
+        run: |
+          aria2c https://github.com/fcitx-contrib/fcitx5-windows/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
+          mkdir -p build/windows-${{ matrix.arch }}/usr
+          tar xf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C build/windows-${{ matrix.arch }}/usr
+
+      - name: Build
+        shell: bash
+        run: |
+          cmake -B build/windows-${{ matrix.arch }} -G Ninja \
+            -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DHANGUL=OFF -DMOZC=OFF -DRIME=OFF -DSKK=OFF -DTABLE_EXTRA=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE='windows-cross/msys2.toolchain.cmake' \
+            -DARCH=${{ matrix.cmake_arch }}
+          cmake --build build/windows-${{ matrix.arch }}
+          ./scripts/install.sh windows ${{ matrix.arch }}
+
+      - name: Upload arch-specific artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-windows-${{ matrix.arch }}
+          path: |
+            build/windows-${{ matrix.arch }}/*-${{ matrix.arch }}.tar.bz2
+
+      - name: Upload arch-unspecific artifact
+        if: ${{ matrix.arch == 'x86_64' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-windows
+          path: |
+            build/windows-${{ matrix.arch }}/*-any.tar.bz2
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
+  compare:
+    needs: build
+    if: ${{ github.ref != 'refs/heads/master' }}
+    uses: ./.github/workflows/compare.yml
+    with:
+      platform: windows
+
+  release:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-windows*
+          merge-multiple: true
+
+      - name: Release
+        uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: windows
+          prerelease: true
+          title: "Windows Build"
+          files: |
+            *.tar.bz2

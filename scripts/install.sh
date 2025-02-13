@@ -17,6 +17,13 @@ macos=(
   unikey
 )
 
+windows=(
+  hallelujah
+  sayura
+  thai
+  unikey
+)
+
 js=(
   anthy
   chewing
@@ -31,7 +38,7 @@ js=(
   unikey
 )
 
-. scripts/platform.sh $1
+. scripts/platform.sh "$@"
 
 ROOT=`pwd`
 CACHE_DIR=$ROOT/cache/$PLATFORM
@@ -51,7 +58,7 @@ package() {
   pushd $TARGET_DIR/$plugin/usr > /dev/null
   python $ROOT/scripts/generate-descriptor.py "${input_methods[@]}"
 
-  if [[ $PLATFORM == "macos" ]]; then
+  if [[ $PLATFORM == "macos" || $PLATFORM == "windows" ]]; then
     # --no-xattrs fixes tar: Special header too large: %llu
     tar cjf ../../$plugin$POSTFIX.tar.bz2 --no-xattrs *
     cd ../data
@@ -73,6 +80,7 @@ for plugin in "${plugins[@]}"; do
   fi
 done
 
+if [[ $PLATFORM != "windows" ]]; then
 extract_dep anthy anthy-cmake
 extract_dep chewing libchewing
 if [[ $PLATFORM == "macos" ]]; then
@@ -104,8 +112,9 @@ skk_dict=SKK-JISYO.L.gz
 [[ -f $ROOT/cache/$skk_dict ]] || wget -P $ROOT/cache https://skk-dev.github.io/dict/$skk_dict
 gunzip -fc $ROOT/cache/$skk_dict > $skk_share_dir/skk/SKK-JISYO.L
 fi
+fi
 
-if [[ $PLATFORM == "macos" ]]; then
+if [[ $PLATFORM == "macos" || $PLATFORM == "windows" ]]; then
   # split arch-specific files with data
   for plugin in "${plugins[@]}"; do
     if [[ $plugin == "table-extra" ]]; then
@@ -133,14 +142,16 @@ if [[ $PLATFORM == "macos" ]]; then
   cp -r $TARGET_DIR/libime-install/usr/lib/libime $TARGET_DIR/chinese-addons/data/lib
 fi
 
+if [[ $PLATFORM != "windows" ]]; then
 package anthy anthy
 package chewing chewing
 package chinese-addons pinyin
-package hallelujah hallelujah
 package hangul hangul
 package lua
 package mozc mozc
 package rime rime
+fi
+package hallelujah hallelujah
 package sayura sayura
 package thai libthai
 package unikey unikey

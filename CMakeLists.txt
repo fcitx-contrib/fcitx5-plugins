@@ -19,10 +19,17 @@ option(UNIKEY "" ON)
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_INSTALL_PREFIX /usr)
 set(FIND_ROOT_PATH "${PROJECT_BINARY_DIR}/usr")
+set(PREBUILDER_BIN_DIR "${FIND_ROOT_PATH}/bin")
 set(PREBUILDER_INCLUDE_DIR "${FIND_ROOT_PATH}/include")
 set(PREBUILDER_LIB_DIR "${FIND_ROOT_PATH}/lib")
-set(ENV{PKG_CONFIG_SYSROOT_DIR} "${PROJECT_BINARY_DIR}")
-set(ENV{PKG_CONFIG_PATH} "${PREBUILDER_LIB_DIR}/pkgconfig")
+
+if (WIN32)
+    set(ENV{PKG_CONFIG_PATH} "${CMAKE_SYSROOT}/lib/pkgconfig")
+else()
+    set(ENV{PKG_CONFIG_SYSROOT_DIR} "${PROJECT_BINARY_DIR}")
+    set(ENV{PKG_CONFIG_PATH} "${PREBUILDER_LIB_DIR}/pkgconfig")
+endif()
+
 # We don't build testing frontends so fake it.
 set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -34,8 +41,11 @@ if (APPLE)
         "${APP_CONTENTS_PATH}"
         "${FIND_ROOT_PATH}"
     )
+elseif (WIN32)
+    list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/relative")
+    add_compile_definitions(-DFcitx5Core_EXPORTS -DFcitx5Utils_EXPORTS)
 elseif (EMSCRIPTEN)
-    list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/js")
+    list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/relative")
     set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
     set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-sSIDE_MODULE")
     set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-sSIDE_MODULE")
@@ -191,16 +201,21 @@ endif()
 
 # thai
 if (THAI)
-add_library(Thai_static STATIC IMPORTED)
-set_target_properties(Thai_static PROPERTIES
-    IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/libthai.a"
-    INTERFACE_INCLUDE_DIRECTORIES "${PREBUILDER_INCLUDE_DIR}"
-)
-set(THAI_TARGET Thai_static)
+if (NOT WIN32)
+    add_library(Thai_static STATIC IMPORTED)
+    set_target_properties(Thai_static PROPERTIES
+        IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/libthai.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${PREBUILDER_INCLUDE_DIR}"
+    )
+    set(THAI_TARGET Thai_static)
+endif()
 add_subdirectory(fcitx5-thai)
 endif()
 
 # unikey
 if (UNIKEY)
 add_subdirectory(fcitx5-unikey)
+if (WIN32)
+    target_compile_definitions(unikey-lib PUBLIC -DUNIKEYHOOK)
+endif()
 endif()

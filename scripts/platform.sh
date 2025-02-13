@@ -4,6 +4,9 @@ if [[ $PLATFORM == "macos" ]]; then
   deps=("${macos[@]}") # for install-deps.sh
   plugins=("${macos[@]}") # for install.sh
   POSTFIX=-`uname -m`
+elif [[ $PLATFORM == "windows" ]]; then
+  plugins=("${windows[@]}")
+  POSTFIX="-$2"
 elif [[ $PLATFORM == "js" ]]; then
   deps=("${js[@]}")
   plugins=("${js[@]}")

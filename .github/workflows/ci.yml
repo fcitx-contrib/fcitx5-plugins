@@ -35,7 +35,8 @@ jobs:
         id: commit-message
         run: |
           if [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
-            echo "message=${{ github.event.head_commit.message }}" >> "$GITHUB_OUTPUT"
+            message=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+            echo "message=$message" >> "$GITHUB_OUTPUT"
           else
             echo "message=${{ github.event.pull_request.title }}" >> "$GITHUB_OUTPUT"
           fi
@@ -46,6 +47,11 @@ jobs:
     uses: ./.github/workflows/macos.yml
     with:
       mozc_sha: ${{ needs.lint.outputs.MOZC_SHA }}
+
+  windows:
+    if: "!contains(needs.lint.outputs.message, '!windows')"
+    needs: lint
+    uses: ./.github/workflows/windows.yml
 
   js:
     if: "!contains(needs.lint.outputs.message, '!js')"

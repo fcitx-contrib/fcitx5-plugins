@@ -25,7 +25,7 @@ except Exception:
     # pure data plugin
     version = None
 
-if target.startswith('macos'):
+if target.startswith('macos') or target.startswith('windows'):
     data_version = dirhash(data_dir, "md5")
 else:
     data_version = None

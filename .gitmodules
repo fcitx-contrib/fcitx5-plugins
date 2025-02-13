@@ -55,3 +55,6 @@
 [submodule "fcitx5-unikey"]
 	path = fcitx5-unikey
 	url = https://github.com/fcitx/fcitx5-unikey
+[submodule "windows-cross"]
+	path = windows-cross
+	url = http://github.com/fcitx-contrib/windows-cross

@@ -58,7 +58,8 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_TOOLCHAIN_FILE='windows-cross/msys2.toolchain.cmake' \
             -DARCH=${{ matrix.cmake_arch }}
-          ./scripts/install.sh windows
+          cmake --build build/windows-${{ matrix.arch }}
+          ./scripts/install.sh windows ${{ matrix.arch }}
 
       - name: Upload arch-specific artifact
         uses: actions/upload-artifact@v4

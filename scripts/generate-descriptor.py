@@ -5,7 +5,7 @@ from dirhash import dirhash
 
 input_methods = sys.argv[1:]
 
-cwd = os.getcwd() # /path/to/build/target/rime/usr
+cwd = os.getcwd().replace(f'\\', '/') # /path/to/build/target/rime/usr
 data_dir = f"{cwd}/../data"
 target, plugin = cwd.split("/")[-3:-1]
 files: list[str] = []

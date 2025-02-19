@@ -77,6 +77,8 @@ for plugin in "${plugins[@]}"; do
   rm -rf $TARGET_DIR/$plugin/usr/share/{icons,metainfo} # only useful for linux
   if [[ $PLATFORM == "macos" ]]; then
     find $TARGET_DIR/$plugin/usr -name '*.so' -exec strip -x {} \;
+  elif [[ $PLATFORM == "windows" ]]; then
+    find $TARGET_DIR/$plugin/usr -name '*.dll' -exec strip -x {} \;
   fi
 done
 

@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - 'macos-[0-9]+.*'
   pull_request:
   workflow_dispatch:
 
@@ -34,11 +36,13 @@ jobs:
       - name: Pass commit message
         id: commit-message
         run: |
-          if [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
+          if [[ "${{ github.event_name }}" == 'pull_request' ]]; then
+            echo "message=${{ github.event.pull_request.title }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
             message=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
             echo "message=$message" >> "$GITHUB_OUTPUT"
           else
-            echo "message=${{ github.event.pull_request.title }}" >> "$GITHUB_OUTPUT"
+            echo "message=!windows!js" >> "$GITHUB_OUTPUT"
           fi
 
   macos:

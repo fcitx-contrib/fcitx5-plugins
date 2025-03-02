@@ -50,7 +50,13 @@ jobs:
 
       - name: Install Fcitx5 dev package
         run: |
-          wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            tag=latest
+          else
+            ref_name=${{ github.ref_name }}
+            tag=${ref_name#macos-}
+          fi
+          wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/$tag/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
           sudo tar xjf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
 
       - name: Build
@@ -98,14 +104,14 @@ jobs:
 
   compare:
     needs: build
-    if: ${{ github.ref != 'refs/heads/master' }}
+    if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/compare.yml
     with:
       platform: macos
 
   release:
     needs: build
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
@@ -118,9 +124,9 @@ jobs:
         uses: 'marvinpinto/action-automatic-releases@latest'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: macos
-          prerelease: true
-          title: "macOS Build"
+          automatic_release_tag: ${{ github.ref == 'refs/heads/master' && 'macos-latest' || github.ref_name }}
+          prerelease: ${{ github.ref == 'refs/heads/master' }}
+          title: ${{ github.ref == 'refs/heads/master' && 'macos-latest' || github.ref_name }}
           files: |
             *.tar.bz2
             meta-arm64.json

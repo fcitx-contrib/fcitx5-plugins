@@ -34,7 +34,7 @@ endif()
 set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 
 if (APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 13) # Also need to update CGO_CFLAGS
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 13.3) # Also need to update CGO_CFLAGS
 
     set(APP_CONTENTS_PATH "/Library/Input Methods/Fcitx5.app/Contents")
     set(CMAKE_FIND_ROOT_PATH

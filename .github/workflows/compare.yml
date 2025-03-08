@@ -29,11 +29,16 @@ jobs:
             echo $file >> manifest
           done
           echo "# ${{ inputs.platform }} comparison" > summary.md
+          if [[ ${{ inputs.platform }} == 'macos' ]]; then
+            tag=macos-latest
+          else
+            tag=${{ inputs.platform }}
+          fi
           mkdir release
           while read file; do
             tar xf $file plugin
             cat plugin/*.json | jq > plugin/json
-            if wget -P release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/${{ inputs.platform }}/$file; then
+            if wget -P release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/$tag/$file; then
               echo "## $file" >> summary.md
               tar xf release/$file -C release plugin
               cat release/plugin/*.json | jq > release/plugin/json

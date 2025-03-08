@@ -34,13 +34,14 @@ endif()
 set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 
 if (APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 13) # Also need to update CGO_CFLAGS
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 13.3) # Also need to update CGO_CFLAGS
 
     set(APP_CONTENTS_PATH "/Library/Input Methods/Fcitx5.app/Contents")
     set(CMAKE_FIND_ROOT_PATH
         "${APP_CONTENTS_PATH}"
         "${FIND_ROOT_PATH}"
     )
+    set(CMAKE_INSTALL_RPATH "${APP_CONTENTS_PATH}/lib") # scel2org5, libime_*
 elseif (WIN32)
     list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/relative")
     add_compile_definitions(-DFcitx5Core_EXPORTS -DFcitx5Utils_EXPORTS)
@@ -90,9 +91,7 @@ add_subdirectory(libime)
 install(TARGETS kenlm EXPORT LibIMECoreTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
 
 set(LIBIME_INSTALL_PKGDATADIR "../libime")
-if (APPLE)
-    set(CMAKE_INSTALL_RPATH "${APP_CONTENTS_PATH}/lib") # scel2org5
-elseif (EMSCRIPTEN)
+if (EMSCRIPTEN)
     option(ENABLE_CLOUDPINYIN "" OFF)
 endif()
 add_subdirectory(fcitx5-chinese-addons)
@@ -137,6 +136,7 @@ if (APPLE)
 endif()
 add_subdirectory(fcitx5-mozc)
 target_include_directories(mozc PRIVATE "${PREBUILDER_INCLUDE_DIR}/mozc")
+target_compile_definitions(mozc PRIVATE -DMOZC_DISABLE_SESSION_WATCHDOG)
 if (EMSCRIPTEN)
     target_include_directories(mozc PRIVATE
         "${PREBUILDER_INCLUDE_DIR}"

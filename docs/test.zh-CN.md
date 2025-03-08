@@ -29,6 +29,11 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 ### pinyin
 * 输入 `long`，候选词 `龙` `🐉` `🐲`。
 * 开启预测，输入 `yu`，上屏 `预`，首选为 `计`，输入 `1` 上屏 `计`。
+* 可以导入 txt 词库并在候选词列表看到新词。
+
+```
+刘齐家 liu'qi'jia 1
+```
 
 ### pinyinhelper
 * 输入 `sheng` 反引号 `hp`，首选为 盛。

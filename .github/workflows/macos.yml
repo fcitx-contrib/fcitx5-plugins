@@ -50,7 +50,7 @@ jobs:
 
       - name: Install Fcitx5 dev package
         run: |
-          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+          if [[ ${{ github.ref }} == 'refs/heads/master' || ${{ github.event_name }} == 'pull_request' ]]; then
             tag=latest
           else
             ref_name=${{ github.ref_name }}

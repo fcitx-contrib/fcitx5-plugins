@@ -136,6 +136,7 @@ if (APPLE)
 endif()
 add_subdirectory(fcitx5-mozc)
 target_include_directories(mozc PRIVATE "${PREBUILDER_INCLUDE_DIR}/mozc")
+target_compile_definitions(mozc PRIVATE -DMOZC_DISABLE_SESSION_WATCHDOG)
 if (EMSCRIPTEN)
     target_include_directories(mozc PRIVATE
         "${PREBUILDER_INCLUDE_DIR}"

@@ -42,7 +42,7 @@ jobs:
             ninja \
             go
           ./scripts/install-deps.sh macos ${{ matrix.arch }}
-          sudo tar xf cache/macos/marisa-$(uname -m).tar.bz2 -C /usr/local bin/marisa-build
+          sudo tar xf cache/macos/marisa-${{ matrix.arch }}.tar.bz2 -C /usr/local bin/marisa-build # Make use of Rosetta
           pip install dirhash
 
       - name: Install Fcitx5 dev package

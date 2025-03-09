@@ -14,7 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64, x86_64]
+        include:
+          - { arch: arm64, goarch: arm64 }
+          - { arch: x86_64, goarch: amd64 }
 
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +63,7 @@ jobs:
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-skk patches/skk.patch
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
-          CGO_CFLAGS="-mmacosx-version-min=13.3" GOFLAGS="-ldflags=-buildid=" cmake --build build/macos-${{ matrix.arch }}
+          CGO_CFLAGS="-mmacosx-version-min=13.3" GOFLAGS="-ldflags=-buildid=" GOARCH=${{ matrix.goarch }} cmake --build build/macos-${{ matrix.arch }}
           ./scripts/install.sh macos ${{ matrix.arch }}
 
       - name: Upload arch-specific artifact

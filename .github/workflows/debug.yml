@@ -5,14 +5,11 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, macos-13]
-        include:
-          - { os: macos-15, arch: arm64 }
-          - { os: macos-13, arch: x86_64 }
+        arch: [arm64, x86_64]
 
     steps:
       - uses: actions/checkout@v4
@@ -24,15 +21,15 @@ jobs:
           brew install \
             extra-cmake-modules \
             ninja
-          ./scripts/install-deps.sh macos
+          ./scripts/install-deps.sh macos ${{ matrix.arch }}
           rm cache/macos/librime-${{ matrix.arch }}.tar.bz2 # wget will append .1 if file already exists.
           wget -P cache/macos https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/debug/librime-${{ matrix.arch }}.tar.bz2
-          tar xjf cache/macos/librime-${{ matrix.arch }}.tar.bz2 -C build/macos-${{ matrix.arch }}/usr
+          tar xf cache/macos/librime-${{ matrix.arch }}.tar.bz2 -C build/macos-${{ matrix.arch }}/usr
 
       - name: Install Fcitx5 dev package
         run: |
           wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
-          sudo tar xjf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
+          sudo tar xf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
 
       - name: Build
         run: |
@@ -40,9 +37,9 @@ jobs:
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Debug \
             -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DHALLELUJAH=OFF -DHANGUL=OFF -DMOZC=OFF -DSAYURA=OFF -DSKK=OFF -DTABLE_EXTRA=OFF -DTHAI=OFF -DUNIKEY=OFF
           cmake --build build/macos-${{ matrix.arch }} --target rime
-          wget -P cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos/rime-${{ matrix.arch }}.tar.bz2
+          wget -P cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/rime-${{ matrix.arch }}.tar.bz2
           mkdir build/rime
-          tar xjf cache/rime-${{ matrix.arch }}.tar.bz2 -C build/rime
+          tar xf cache/rime-${{ matrix.arch }}.tar.bz2 -C build/rime
           mv build/macos-${{ matrix.arch }}/fcitx5-rime/src/librime.so build/rime/lib/fcitx5
           cd build/rime
           tar cjf ../../rime-${{ matrix.arch }}.tar.bz2 --no-xattrs *

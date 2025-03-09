@@ -1,8 +1,8 @@
 import json
 import os
-import platform
+import sys
 
-arch = platform.machine()
+arch = sys.argv[1]
 plugins = []
 
 for file in os.listdir(f"build/macos-{arch}"):

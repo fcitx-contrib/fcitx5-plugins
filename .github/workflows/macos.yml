@@ -10,14 +10,13 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, macos-13]
         include:
-          - { os: macos-15, arch: arm64 }
-          - { os: macos-13, arch: x86_64 }
+          - { arch: arm64, goarch: arm64 }
+          - { arch: x86_64, goarch: amd64 }
 
     steps:
       - uses: actions/checkout@v4
@@ -44,8 +43,8 @@ jobs:
             extra-cmake-modules \
             ninja \
             go
-          ./scripts/install-deps.sh macos
-          sudo tar xjf cache/macos/marisa-${{ matrix.arch }}.tar.bz2 -C /usr/local bin/marisa-build
+          ./scripts/install-deps.sh macos ${{ matrix.arch }}
+          sudo tar xf cache/macos/marisa-${{ matrix.arch }}.tar.bz2 -C /usr/local bin/marisa-build # Make use of Rosetta
           pip install dirhash
 
       - name: Install Fcitx5 dev package
@@ -57,15 +56,20 @@ jobs:
             tag=${ref_name#macos-}
           fi
           wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/$tag/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
-          sudo tar xjf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
+          sudo tar xf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
 
       - name: Build
+        env:
+          CGO_ENABLED: 1
+          CGO_CFLAGS: -mmacosx-version-min=13.3
+          GOFLAGS: -ldflags=-buildid=
+          GOARCH: ${{ matrix.goarch }}
         run: |
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-skk patches/skk.patch
-          cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release
-          CGO_CFLAGS="-mmacosx-version-min=13.3" GOFLAGS="-ldflags=-buildid=" cmake --build build/macos-${{ matrix.arch }}
-          ./scripts/install.sh macos
+          cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
+          cmake --build build/macos-${{ matrix.arch }}
+          ./scripts/install.sh macos ${{ matrix.arch }}
 
       - name: Upload arch-specific artifact
         uses: actions/upload-artifact@v4
@@ -75,7 +79,7 @@ jobs:
             build/macos-${{ matrix.arch }}/*-${{ matrix.arch }}.tar.bz2
 
       - name: Upload arch-unspecific artifact
-        if: ${{ matrix.os == 'macos-15' }}
+        if: ${{ matrix.arch == 'arm64' }}
         uses: actions/upload-artifact@v4
         with:
           name: artifact-macos
@@ -89,7 +93,7 @@ jobs:
 
       - name: Generate meta-${{ matrix.arch }}.json
         run: |
-          python scripts/generate-meta.py
+          python scripts/generate-meta.py ${{ matrix.arch }}
 
       - name: Upload meta-${{ matrix.arch }}.json
         uses: actions/upload-artifact@v4

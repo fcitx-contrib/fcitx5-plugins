@@ -89,8 +89,8 @@ if [[ $PLATFORM == "macos" ]]; then
   extract_dep chinese-addons opencc
 else
   file=chinese-addons-any.tar.bz2
-  [[ -f $ROOT/cache/$file ]] || wget -P $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos/$file
-  tar xjf $ROOT/cache/$file -C $TARGET_DIR/chinese-addons/usr lib/libime share/fcitx5/pinyin share/libime share/opencc
+  [[ -f $ROOT/cache/$file ]] || wget -P $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
+  tar xf $ROOT/cache/$file -C $TARGET_DIR/chinese-addons/usr lib/libime share/fcitx5/pinyin share/libime share/opencc
 fi
 extract_dep hangul libhangul
 

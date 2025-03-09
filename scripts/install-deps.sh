@@ -45,7 +45,7 @@ js=(
   zstd
 )
 
-. scripts/platform.sh $1
+. scripts/platform.sh "$@"
 
 EXTRACT_DIR=build/$TARGET/usr
 CACHE_DIR=cache/$PLATFORM
@@ -54,7 +54,7 @@ mkdir -p $EXTRACT_DIR $CACHE_DIR
 for dep in "${deps[@]}"; do
   file=$dep$POSTFIX.tar.bz2
   [[ -f $CACHE_DIR/$file ]] || wget -P $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PLATFORM/$file
-  tar xjf $CACHE_DIR/$file -C $EXTRACT_DIR
+  tar xf $CACHE_DIR/$file -C $EXTRACT_DIR
 done
 
 if [[ $PLATFORM == "macos" ]]; then

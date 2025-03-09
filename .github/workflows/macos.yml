@@ -79,7 +79,7 @@ jobs:
             build/macos-${{ matrix.arch }}/*-${{ matrix.arch }}.tar.bz2
 
       - name: Upload arch-unspecific artifact
-        if: ${{ matrix.os == 'macos-15' }}
+        if: ${{ matrix.arch == 'arm64' }}
         uses: actions/upload-artifact@v4
         with:
           name: artifact-macos

@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Install bsdtar
         run: |
+          sudo rm /var/lib/man-db/auto-update
           sudo apt install -y libarchive-tools
           sudo ln -sf /usr/bin/bsdtar /usr/bin/tar
 

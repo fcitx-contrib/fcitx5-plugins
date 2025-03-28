@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from typing import Any
 from dirhash import dirhash
 
 input_methods = sys.argv[1:]
@@ -38,7 +39,7 @@ plugin_dir = f"{data_dir}/plugin"
 os.makedirs(plugin_dir, exist_ok=True)
 descriptor_path = f"{plugin_dir}/{plugin}.json"
 with open(descriptor_path, "w") as f:
-    descriptor = {
+    descriptor: dict[str, Any] = {
         "files": files
     }
     if data_version:

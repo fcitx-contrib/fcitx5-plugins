@@ -158,6 +158,7 @@ set(Rime_dependencies
     "-lopencc"
     "-lglog"
     "-llua"
+    "-lqjs"
 )
 add_library(Rime_static STATIC IMPORTED)
 set_target_properties(Rime_static PROPERTIES

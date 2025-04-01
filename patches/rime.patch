@@ -1,0 +1,63 @@
+diff --git a/src/rimeengine.cpp b/src/rimeengine.cpp
+index b335069..ca08611 100644
+--- a/src/rimeengine.cpp
++++ b/src/rimeengine.cpp
+@@ -46,6 +46,7 @@
+ #include <unordered_map>
+ #include <utility>
+ #include <vector>
++#include <emscripten.h>
+ 
+ FCITX_DEFINE_LOG_CATEGORY(rime_log, "rime");
+ 
+@@ -299,13 +300,26 @@ void RimeEngine::rimeStart(bool fullcheck) {
+     fcitx_rime_traits.modules = nullptr;
+ #endif
+ 
++    bool autoDeploy = false;
+     if (firstRun_) {
+         api_->setup(&fcitx_rime_traits);
+         firstRun_ = false;
++        if (!EM_ASM_INT(return fcitx.isWorker)) {
++            autoDeploy = !fs::isreg(stringutils::joinPath(userDir, "build/default.yaml"));
++        }
+     }
+     api_->initialize(&fcitx_rime_traits);
+     api_->set_notification_handler(&rimeNotificationHandler, this);
+-    api_->start_maintenance(fullcheck);
++    /*          main     worker
++    start  default.yaml?   no
++    reload       no        no
++    deploy      yes       yes
++    */
++    if (fullcheck || autoDeploy) {
++        if (!EM_ASM_INT(return fcitx.deployRimeInWorker())) {
++            api_->start_maintenance(fullcheck);
++        }
++    }
+ 
+     if (!api_->is_maintenance_mode()) {
+         updateAppOptions();
+@@ -582,12 +596,13 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
+     bool blockMessage = false;
+     if (messageType == "deploy") {
+         tipId = "fcitx-rime-deploy";
+-        icon = "fcitx_rime_deploy";
+         if (messageValue == "start") {
+             message = _("Rime is under maintenance. It may take a few "
+                         "seconds. Please wait until it is finished...");
++            icon = "info";
+         } else if (messageValue == "success") {
+             message = _("Rime is ready.");
++            icon = "success";
+             if (!api_->is_maintenance_mode()) {
+                 if (needRefreshAppOption_) {
+                     api_->deploy_config_file("fcitx5.yaml", "config_version");
+@@ -602,6 +617,7 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
+             needRefreshAppOption_ = false;
+             message = _("Rime has encountered an error. "
+                         "See log for details.");
++            icon = "error";
+             blockMessage = true;
+         }
+     } else if (messageType == "option") {

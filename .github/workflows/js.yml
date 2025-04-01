@@ -54,6 +54,7 @@ jobs:
           . emsdk/emsdk_env.sh
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
+          git apply --directory=fcitx5-rime patches/rime.patch
           emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build build/js
           ./scripts/install.sh js

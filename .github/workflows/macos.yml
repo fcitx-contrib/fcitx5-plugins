@@ -66,7 +66,6 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           git apply --directory=libime patches/libime.patch
-          git apply --directory=fcitx5-skk patches/skk.patch
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
           cmake --build build/macos-${{ matrix.arch }}
           ./scripts/install.sh macos ${{ matrix.arch }}

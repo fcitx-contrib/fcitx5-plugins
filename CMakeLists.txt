@@ -160,6 +160,11 @@ set(Rime_dependencies
     "-llua"
     "-lqjs"
 )
+if (APPLE)
+    find_library(LibJSCore JavaScriptCore)
+    list(APPEND Rime_dependencies "${LibJSCore}")
+endif()
+
 add_library(Rime_static STATIC IMPORTED)
 set_target_properties(Rime_static PROPERTIES
     IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/librime.a"

@@ -8,6 +8,7 @@ macos=(
   hallelujah
   hangul
   lua
+  m17n
   mozc
   rime
   sayura
@@ -31,6 +32,7 @@ js=(
   hallelujah
   hangul
   lua
+  m17n
   mozc
   rime
   sayura
@@ -93,6 +95,7 @@ else
   tar xf $ROOT/cache/$file -C $TARGET_DIR/chinese-addons/usr lib/libime share/fcitx5/pinyin share/libime share/opencc
 fi
 extract_dep hangul libhangul
+extract_dep m17n m17n-db
 
 # rime
 rime_dir=$TARGET_DIR/rime/usr/share/rime-data
@@ -154,6 +157,7 @@ package mozc mozc
 package rime rime
 fi
 package hallelujah hallelujah
+package m17n
 package sayura sayura
 package thai libthai
 package unikey unikey

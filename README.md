@@ -30,6 +30,7 @@ Build plugins for
 * [thai](https://github.com/fcitx/fcitx5-libthai): GPL-2.0-or-later
 
 ### Vietnamese
+* [bamboo](https://github.com/fcitx/fcitx5-bamboo): LGPL-2.1-or-later
 * [unikey](https://github.com/fcitx/fcitx5-unikey): GPL-2.0-or-later
 
 ### Generic
@@ -38,6 +39,7 @@ Build plugins for
   * [librime-lua](https://github.com/hchunhui/librime-lua): BSD-3-Clause
   * [librime-octagram](https://github.com/lotem/librime-octagram): GPL-3.0-only
   * [librime-predict](https://github.com/rime/librime-predict): BSD-3-Clause
+* [m17n](https://github.com/fcitx/fcitx5-m17n): LGPL-2.1-or-later
 
 ### Other
 * [lua](https://github.com/fcitx/fcitx5-lua): LGPL-2.1-or-later

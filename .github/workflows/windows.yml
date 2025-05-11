@@ -55,7 +55,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build/windows-${{ matrix.arch }} -G Ninja \
-            -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DHANGUL=OFF -DMOZC=OFF -DRIME=OFF -DSKK=OFF -DTABLE_EXTRA=OFF \
+            -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DHANGUL=OFF -DM17N=OFF -DMOZC=OFF -DRIME=OFF -DSKK=OFF -DTABLE_EXTRA=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_TOOLCHAIN_FILE='windows-cross/msys2.toolchain.cmake' \
             -DARCH=${{ matrix.cmake_arch }}

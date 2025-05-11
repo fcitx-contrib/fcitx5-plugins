@@ -8,6 +8,7 @@ option(CHEWING "" ON)
 option(CHINESE_ADDONS "" ON)
 option(HALLELUJAH "" ON)
 option(HANGUL "" ON)
+option(M17N "" ON)
 option(MOZC "" ON)
 option(RIME "" ON)
 option(SAYURA "" ON)
@@ -120,6 +121,17 @@ set_target_properties(Hangul_static PROPERTIES
 )
 set(HANGUL_TARGET Hangul_static)
 add_subdirectory(fcitx5-hangul)
+endif()
+
+# m17n
+if (M17N)
+add_library(m17n_static STATIC IMPORTED)
+set_target_properties(m17n_static PROPERTIES
+    IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/libm17n.a"
+    INTERFACE_INCLUDE_DIRECTORIES "${PREBUILDER_INCLUDE_DIR}"
+)
+set(M17N_TARGET m17n_static)
+add_subdirectory(fcitx5-m17n)
 endif()
 
 # mozc

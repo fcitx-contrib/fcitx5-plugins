@@ -18,6 +18,7 @@ macos=(
   libthai
   libxkbcommon
   lua
+  m17n-cmake
   marisa
   opencc
   pcre2
@@ -39,6 +40,7 @@ js=(
   librime
   libthai
   lua
+  m17n-cmake
   marisa
   opencc
   yaml-cpp
@@ -56,6 +58,11 @@ for dep in "${deps[@]}"; do
   [[ -f $CACHE_DIR/$file ]] || wget -P $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PLATFORM/$file
   tar xf $CACHE_DIR/$file -C $EXTRACT_DIR
 done
+
+# Platform-unspecific packages
+file=m17n-db.tar.bz2
+[[ -f cache/$file ]] || wget -P cache https://github.com/fcitx-contrib/m17n-cmake/releases/download/latest/$file
+ln -sf ../$file $CACHE_DIR/m17n-db$POSTFIX.tar.bz2
 
 if [[ $PLATFORM == "macos" ]]; then
 sed -i.bak 's|Requires: glib-2.0.*|Requires: glib-2.0|' $(find build -name gobject-2.0.pc)

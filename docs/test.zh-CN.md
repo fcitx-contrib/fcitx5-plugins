@@ -67,6 +67,11 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 
 * 拼音输入 `riqi`，三选为今天日期。
 
+## m17n
+
+### math-latex
+* 输入 `\eta`，预编辑为 `η`。
+
 ## mozc
 
 * 输入 `mizu` 空格 回车，上屏 `水`。

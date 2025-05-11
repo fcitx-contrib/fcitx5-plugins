@@ -153,11 +153,11 @@ package chewing chewing
 package chinese-addons pinyin
 package hangul hangul
 package lua
+package m17n
 package mozc mozc
 package rime rime
 fi
 package hallelujah hallelujah
-package m17n
 package sayura sayura
 package thai libthai
 package unikey unikey

@@ -1,5 +1,5 @@
 diff --git a/src/rimeengine.cpp b/src/rimeengine.cpp
-index cdaaa3d..c03edb1 100644
+index cdaaa3d..4295375 100644
 --- a/src/rimeengine.cpp
 +++ b/src/rimeengine.cpp
 @@ -47,6 +47,7 @@
@@ -19,7 +19,7 @@ index cdaaa3d..c03edb1 100644
          api_->setup(&fcitx_rime_traits);
          firstRun_ = false;
 +        if (!EM_ASM_INT(return fcitx.isWorker)) {
-+            autoDeploy = !fs::isreg(stringutils::joinPath(userDir, "build/default.yaml"));
++            autoDeploy = !fs::isreg(userDir / "build/default.yaml");
 +        }
      }
      api_->initialize(&fcitx_rime_traits);

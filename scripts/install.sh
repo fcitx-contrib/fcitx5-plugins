@@ -76,11 +76,13 @@ for plugin in "${plugins[@]}"; do
   DESTDIR=$TARGET_DIR/$plugin cmake --install build/$TARGET/fcitx5-$plugin
   rm -rf $TARGET_DIR/$plugin/usr/include
   rm -rf $TARGET_DIR/$plugin/usr/lib/cmake
-  rm -rf $TARGET_DIR/$plugin/usr/share/{icons,metainfo} # only useful for linux
+  rm -rf $TARGET_DIR/$plugin/usr/share/metainfo # only useful for linux
   if [[ $PLATFORM == "macos" ]]; then
     find $TARGET_DIR/$plugin/usr -name '*.so' -exec strip -x {} \;
   elif [[ $PLATFORM == "windows" ]]; then
     find $TARGET_DIR/$plugin/usr -name '*.dll' -exec strip -x {} \;
+  elif [[ $PLATFORM == "js" ]]; then
+    rm -rf $TARGET_DIR/$plugin/usr/share/icons
   fi
 done
 

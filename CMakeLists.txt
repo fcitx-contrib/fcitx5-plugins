@@ -31,6 +31,10 @@ else()
     set(ENV{PKG_CONFIG_PATH} "${PREBUILDER_LIB_DIR}/pkgconfig")
 endif()
 
+if (NOT APPLE) # On macOS compile prefix is the same with runtime prefix.
+    set(Fcitx5Utils_DIR "${PROJECT_SOURCE_DIR}/cmake")
+endif()
+
 # We don't build testing frontends so fake it.
 set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 

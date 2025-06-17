@@ -31,6 +31,7 @@ else()
     set(ENV{PKG_CONFIG_PATH} "${PREBUILDER_LIB_DIR}/pkgconfig")
 endif()
 
+set(Fcitx5Utils_DIR "${PROJECT_SOURCE_DIR}/cmake")
 # We don't build testing frontends so fake it.
 set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 

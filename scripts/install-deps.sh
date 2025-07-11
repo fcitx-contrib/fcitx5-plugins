@@ -6,7 +6,7 @@ macos=(
   fmt
   glib
   glog
-  json-c
+  json
   json-glib
   leveldb
   libchewing
@@ -32,7 +32,7 @@ js=(
   ecm
   fmt
   glog
-  json-c
+  json
   leveldb
   libchewing
   libhangul

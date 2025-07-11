@@ -29,8 +29,8 @@ jobs:
           C:/msys64/usr/bin/pacman -S --noconfirm `
             mingw-w64-clang-${{ matrix.pkg_arch }}-extra-cmake-modules `
             mingw-w64-clang-${{ matrix.pkg_arch }}-fmt `
-            mingw-w64-clang-${{ matrix.pkg_arch }}-json-c `
             mingw-w64-clang-${{ matrix.pkg_arch }}-libthai `
+            mingw-w64-clang-${{ matrix.pkg_arch }}-nlohmann-json `
             mingw-w64-clang-x86_64-clang `
             mingw-w64-clang-x86_64-cmake `
             mingw-w64-clang-x86_64-marisa `

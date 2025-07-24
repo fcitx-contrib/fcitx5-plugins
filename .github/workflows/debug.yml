@@ -41,7 +41,7 @@ jobs:
           wget -P cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/rime-${{ matrix.arch }}.tar.bz2
           mkdir build/rime
           tar xf cache/rime-${{ matrix.arch }}.tar.bz2 -C build/rime
-          mv build/macos-${{ matrix.arch }}/fcitx5-rime/src/librime.so build/rime/lib/fcitx5
+          mv build/macos-${{ matrix.arch }}/bin/librime.so build/rime/lib/fcitx5
           cd build/rime
           tar cjf ../../rime-${{ matrix.arch }}.tar.bz2 --no-xattrs *
 

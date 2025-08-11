@@ -15,7 +15,7 @@ jobs:
           - { arch: arm64, cmake_arch: ARM64, pkg_arch: aarch64 }
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 

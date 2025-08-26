@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     env:
-      EMSCRIPTEN_VERSION: '4.0.12'
+      EMSCRIPTEN_VERSION: '4.0.13'
     steps:
       - uses: actions/checkout@v5
         with:
@@ -24,6 +24,11 @@ jobs:
           repository: google/mozc
           path: fcitx5-mozc/mozc
           ref: ${{ inputs.mozc_sha }}
+
+      - uses: actions/checkout@v5
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
 
       - uses: actions/setup-python@v5
         with:
@@ -43,9 +48,8 @@ jobs:
           tar xjf fcitx5-js-dev.tar.bz2 -C build/js/usr
 
       - name: Install emsdk
+        working-directory: emsdk
         run: |
-          git clone https://github.com/emscripten-core/emsdk
-          cd emsdk
           ./emsdk install ${{ env.EMSCRIPTEN_VERSION }}
           ./emsdk activate ${{ env.EMSCRIPTEN_VERSION }}
 
@@ -54,7 +58,8 @@ jobs:
           . emsdk/emsdk_env.sh
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
-          git apply --directory=fcitx5-rime patches/rime.patch
+          git apply --directory=fcitx5-rime patches/rime.log.patch
+          git apply --directory=fcitx5-rime patches/rime.js.patch
           emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build build/js
           ./scripts/install.sh js

@@ -1,0 +1,17 @@
+diff --git a/src/rimeengine.cpp b/src/rimeengine.cpp
+index cdaaa3d..eaef05a 100644
+--- a/src/rimeengine.cpp
++++ b/src/rimeengine.cpp
+@@ -275,9 +275,11 @@ void RimeEngine::rimeStart(bool fullcheck) {
+         break;
+     case Error:
+     case Warn:
+-    case Info:
+         fcitx_rime_traits.min_log_level = 2;
+         break;
++    case Info:
++        fcitx_rime_traits.min_log_level = 1;
++        break;
+     case Debug:
+     default:
+         // Rime info is too noisy.

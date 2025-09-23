@@ -1,16 +1,25 @@
 diff --git a/src/rimeengine.cpp b/src/rimeengine.cpp
-index cdaaa3d..20c31e1 100644
+index cdaaa3d..dcddf74 100644
 --- a/src/rimeengine.cpp
 +++ b/src/rimeengine.cpp
-@@ -47,6 +47,7 @@
- #include <unordered_map>
+@@ -48,6 +48,16 @@
  #include <utility>
  #include <vector>
-+#include <emscripten.h>
  
++namespace fcitx {
++enum class Runtime {
++    web = 0,
++    webworker = 1,
++    serviceworker = 2, // ChromeOS
++};
++extern Runtime runtime;
++extern int deployRimeInWorker();
++}
++
  FCITX_DEFINE_LOG_CATEGORY(rime_log, "rime");
  
-@@ -287,13 +288,26 @@ void RimeEngine::rimeStart(bool fullcheck) {
+ namespace fcitx::rime {
+@@ -287,13 +297,26 @@ void RimeEngine::rimeStart(bool fullcheck) {
  
      fcitx_rime_traits.modules = nullptr;
  
@@ -18,27 +27,27 @@ index cdaaa3d..20c31e1 100644
      if (firstRun_) {
          api_->setup(&fcitx_rime_traits);
          firstRun_ = false;
-+        if (EM_ASM_INT(return fcitx.runtime) == 0 /* web */) {
++        if (runtime == Runtime::web) {
 +            autoDeploy = !fs::isreg(userDir / "build/default.yaml");
 +        }
      }
      api_->initialize(&fcitx_rime_traits);
      api_->set_notification_handler(&rimeNotificationHandler, this);
 -    api_->start_maintenance(fullcheck);
-+    /*          main     worker
-+    start  default.yaml?   no
-+    reload       no        no
-+    deploy      yes       yes
++    /*          web      web worker  service worker
++    start  default.yaml?     no            no
++    reload       no          no            no
++    deploy   !useWorker     yes            no
 +    */
 +    if (fullcheck || autoDeploy) {
-+        if (!EM_ASM_INT(return fcitx.deployRimeInWorker())) {
++        if (!deployRimeInWorker()) {
 +            api_->start_maintenance(fullcheck);
 +        }
 +    }
  
      if (!api_->is_maintenance_mode()) {
          updateAppOptions();
-@@ -521,12 +535,13 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
+@@ -521,12 +544,13 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
      bool blockMessage = false;
      if (messageType == "deploy") {
          tipId = "fcitx-rime-deploy";
@@ -53,7 +62,7 @@ index cdaaa3d..20c31e1 100644
              if (!api_->is_maintenance_mode()) {
                  if (needRefreshAppOption_) {
                      api_->deploy_config_file("fcitx5.yaml", "config_version");
-@@ -541,6 +556,7 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
+@@ -541,6 +565,7 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
              needRefreshAppOption_ = false;
              message = _("Rime has encountered an error. "
                          "See log for details.");

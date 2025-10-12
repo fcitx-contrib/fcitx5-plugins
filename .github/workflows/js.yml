@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     env:
-      EMSCRIPTEN_VERSION: '4.0.15'
+      EMSCRIPTEN_VERSION: '4.0.16'
     steps:
       - uses: actions/checkout@v5
         with:

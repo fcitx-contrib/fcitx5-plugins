@@ -5,7 +5,7 @@
     "lint": "eslint tests",
     "lint:fix": "eslint --fix tests",
     "check": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test --browser all"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",

@@ -9,85 +9,127 @@ on:
         type: string
 
 jobs:
-  build:
-    runs-on: ubuntu-24.04
-    env:
-      EMSCRIPTEN_VERSION: '4.0.17'
+  # build:
+  #   runs-on: ubuntu-24.04
+  #   env:
+  #     EMSCRIPTEN_VERSION: '4.0.17'
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #       with:
+  #         submodules: recursive
+
+  #     - uses: actions/checkout@v5
+  #       with:
+  #         submodules: recursive
+  #         repository: google/mozc
+  #         path: fcitx5-mozc/mozc
+  #         ref: ${{ inputs.mozc_sha }}
+
+  #     - uses: actions/checkout@v5
+  #       with:
+  #         repository: emscripten-core/emsdk
+  #         path: emsdk
+
+  #     - uses: actions/setup-python@v6
+  #       with:
+  #         python-version: '3.14'
+
+  #     - name: Install dependencies
+  #       run: |
+  #         sudo apt install -y ninja-build \
+  #           gettext \
+  #           marisa
+  #         ./scripts/install-deps.sh js
+  #         pip install dirhash
+
+  #     - name: Install Fcitx5 dev package
+  #       run: |
+  #         wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/latest/fcitx5-js-dev.tar.bz2
+  #         tar xjf fcitx5-js-dev.tar.bz2 -C build/js/usr
+
+  #     - name: Install emsdk
+  #       working-directory: emsdk
+  #       run: |
+  #         ./emsdk install ${{ env.EMSCRIPTEN_VERSION }}
+  #         ./emsdk activate ${{ env.EMSCRIPTEN_VERSION }}
+
+  #     - name: Build
+  #       run: |
+  #         . emsdk/emsdk_env.sh
+  #         git apply --directory=libime patches/libime.patch
+  #         git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
+  #         git apply --directory=fcitx5-rime patches/rime.log.patch
+  #         git apply --directory=fcitx5-rime patches/rime.js.patch
+  #         emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release
+  #         cmake --build build/js
+  #         ./scripts/install.sh js
+
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: artifact-js
+  #         path: |
+  #           build/js/*.zip
+
+  #     - name: Check validity
+  #       run: |
+  #         python scripts/check-shared-files.py build/js/*/usr/plugin/*.json
+
+  #     - name: Setup tmate session
+  #       if: ${{ failure() }}
+  #       uses: mxschmitt/action-tmate@v3
+
+  # compare:
+  #   needs: build
+  #   if: ${{ github.ref != 'refs/heads/master' }}
+  #   uses: ./.github/workflows/compare.yml
+  #   with:
+  #     platform: js
+
+  test:
+    # needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-24.04 }
+          - { os: ubuntu-24.04-arm }
+          - { os: macos-26 }
+          - { os: windows-2025 }
     steps:
       - uses: actions/checkout@v5
-        with:
-          submodules: recursive
 
-      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
         with:
-          submodules: recursive
-          repository: google/mozc
-          path: fcitx5-mozc/mozc
-          ref: ${{ inputs.mozc_sha }}
+          node-version: 24.x
 
-      - uses: actions/checkout@v5
-        with:
-          repository: emscripten-core/emsdk
-          path: emsdk
-
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.14'
+      - name: Download artifact
+        # uses: actions/download-artifact@v5
+        # with:
+        #   path: build/js
+        run: |
+          mkdir -p build/js
+          curl -LO --output-dir build/js https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/js/mozc.zip
 
       - name: Install dependencies
         run: |
-          sudo apt install -y ninja-build \
-            gettext \
-            marisa
-          ./scripts/install-deps.sh js
-          pip install dirhash
+          curl -LO --output-dir cache https://github.com/fcitx-contrib/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          unzip cache/fcitx5-online.zip
+          npm i -g pnpm
+          pnpm i
+          npx playwright install
+          npx playwright install-deps
 
-      - name: Install Fcitx5 dev package
-        run: |
-          wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/latest/fcitx5-js-dev.tar.bz2
-          tar xjf fcitx5-js-dev.tar.bz2 -C build/js/usr
-
-      - name: Install emsdk
-        working-directory: emsdk
-        run: |
-          ./emsdk install ${{ env.EMSCRIPTEN_VERSION }}
-          ./emsdk activate ${{ env.EMSCRIPTEN_VERSION }}
-
-      - name: Build
-        run: |
-          . emsdk/emsdk_env.sh
-          git apply --directory=libime patches/libime.patch
-          git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
-          git apply --directory=fcitx5-rime patches/rime.log.patch
-          git apply --directory=fcitx5-rime patches/rime.js.patch
-          emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release
-          cmake --build build/js
-          ./scripts/install.sh js
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifact-js
-          path: |
-            build/js/*.zip
-
-      - name: Check validity
-        run: |
-          python scripts/check-shared-files.py build/js/*/usr/plugin/*.json
+      - name: Test
+        run: pnpm run test
 
       - name: Setup tmate session
         if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
 
-  compare:
-    needs: build
-    if: ${{ github.ref != 'refs/heads/master' }}
-    uses: ./.github/workflows/compare.yml
-    with:
-      platform: js
-
   release:
-    needs: build
+    needs: test
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     steps:

@@ -5,3 +5,8 @@ cache/js
 meta-*.json
 *.gz
 *.bz2
+node_modules
+pnpm-lock.yaml
+*.tsbuildinfo
+fcitx5-online*
+test-results

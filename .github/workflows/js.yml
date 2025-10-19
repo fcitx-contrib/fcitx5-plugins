@@ -119,7 +119,14 @@ jobs:
           npx playwright install-deps
 
       - name: Test
+        if: ${{ startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'windows') }}
         run: pnpm run test
+
+      - name: Test
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: |
+          pnpm run test:chromium
+          pnpm run test:firefox
 
   release:
     needs: test

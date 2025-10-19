@@ -1,0 +1,20 @@
+{
+  "name": "fcitx5-plugins",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint tests",
+    "lint:fix": "eslint --fix tests",
+    "check": "tsc --noEmit",
+    "test": "playwright test --browser all",
+    "test:chromium": "playwright test --browser chromium",
+    "test:firefox": "playwright test --browser firefox",
+    "test:webkit": "playwright test --browser webkit"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.0.0",
+    "@playwright/test": "^1.56.1",
+    "eslint": "^9.38.0",
+    "serve": "^14.2.5",
+    "typescript": "^5.9.3"
+  }
+}

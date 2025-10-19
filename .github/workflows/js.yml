@@ -86,8 +86,50 @@ jobs:
     with:
       platform: js
 
-  release:
+  test:
     needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-24.04 }
+          - { os: ubuntu-24.04-arm }
+          - { os: macos-26 }
+          - { os: windows-2025 }
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          path: build/js
+
+      - name: Install dependencies
+        run: |
+          curl -LO --output-dir cache https://github.com/fcitx-contrib/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          unzip cache/fcitx5-online.zip
+          npm i -g pnpm
+          pnpm i
+          npx playwright install
+          npx playwright install-deps
+
+      - name: Test
+        if: ${{ startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'windows') }}
+        run: pnpm run test
+
+      - name: Test
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: |
+          pnpm run test:chromium
+          pnpm run test:firefox
+
+  release:
+    needs: test
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     steps:

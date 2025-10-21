@@ -2,7 +2,6 @@ import { test } from '@playwright/test'
 import { expectCandidate, expectText, init } from './util'
 
 test('Mizu', async ({ page }) => {
-  test.skip(page.context().browser()!.browserType().name() === 'chromium', 'Chromium rejects big wasm executable.')
   await init(page, 'mozc', 'Mozc')
 
   await page.keyboard.type('m')

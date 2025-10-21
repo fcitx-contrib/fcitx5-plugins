@@ -98,6 +98,10 @@ else
 fi
 extract_dep hangul libhangul
 extract_dep m17n m17n-db
+# JS doesn't embed mozc.data to libmozc.so.
+if [[ $PLATFORM == "js" ]]; then
+  extract_dep mozc libmozc
+fi
 
 # rime
 rime_dir=$TARGET_DIR/rime/usr/share/rime-data

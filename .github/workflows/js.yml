@@ -65,7 +65,7 @@ jobs:
           ./scripts/install.sh js
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-js
           path: |
@@ -105,7 +105,7 @@ jobs:
           node-version: 24.x
 
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: build/js
 
@@ -134,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-js
           merge-multiple: true

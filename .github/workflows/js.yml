@@ -107,11 +107,12 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v6
         with:
+          name: artifact-js
           path: build/js
 
       - name: Install dependencies
         run: |
-          curl -LO --output-dir cache https://github.com/fcitx-contrib/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/latest/fcitx5-online.zip
           unzip cache/fcitx5-online.zip
           npm i -g pnpm
           pnpm i

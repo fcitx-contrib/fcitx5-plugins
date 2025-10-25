@@ -46,7 +46,7 @@ jobs:
           tar cjf ../../rime-${{ matrix.arch }}.tar.bz2 --no-xattrs *
 
       - name: Upload arch-specific artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-rime-${{ matrix.arch }}
           path: |
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: artifact-rime*
           merge-multiple: true

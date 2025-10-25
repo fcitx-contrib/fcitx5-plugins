@@ -63,7 +63,7 @@ jobs:
           ./scripts/install.sh windows ${{ matrix.arch }}
 
       - name: Upload arch-specific artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-windows-${{ matrix.arch }}
           path: |
@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload arch-unspecific artifact
         if: ${{ matrix.arch == 'x86_64' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-windows
           path: |
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: artifact-windows*
           merge-multiple: true

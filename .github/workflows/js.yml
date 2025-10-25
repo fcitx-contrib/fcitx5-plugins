@@ -65,7 +65,7 @@ jobs:
           ./scripts/install.sh js
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-js
           path: |
@@ -105,13 +105,14 @@ jobs:
           node-version: 24.x
 
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
+          name: artifact-js
           path: build/js
 
       - name: Install dependencies
         run: |
-          curl -LO --output-dir cache https://github.com/fcitx-contrib/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/latest/fcitx5-online.zip
           unzip cache/fcitx5-online.zip
           npm i -g pnpm
           pnpm i
@@ -134,7 +135,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-js
           merge-multiple: true

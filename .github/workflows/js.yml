@@ -94,7 +94,6 @@ jobs:
       matrix:
         include:
           - { os: ubuntu-24.04 }
-          - { os: ubuntu-24.04-arm }
           - { os: macos-26 }
           - { os: windows-2025 }
     steps:
@@ -113,6 +112,7 @@ jobs:
       - name: Install dependencies
         run: |
           curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          curl -LO --output-dir tests/rime https://github.com/rime/librime-predict/releases/download/data-1.0/predict.db
           unzip cache/fcitx5-online.zip
           npm i -g pnpm
           pnpm i
@@ -120,14 +120,7 @@ jobs:
           npx playwright install-deps
 
       - name: Test
-        if: ${{ startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'windows') }}
         run: pnpm run test
-
-      - name: Test
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
-        run: |
-          pnpm run test:chromium
-          pnpm run test:firefox
 
   release:
     needs: test

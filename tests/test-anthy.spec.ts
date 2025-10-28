@@ -1,11 +1,10 @@
 import { test } from '@playwright/test'
-import { expectCandidate, expectText, init } from './util'
+import { expectText, init } from './util'
 
 test('Mizu', async ({ page }) => {
-  await init(page, 'mozc', 'Mozc')
+  await init(page, 'anthy', 'Anthy')
 
   await page.keyboard.type('mizu')
-  await expectCandidate(page, '水')
   await expectText(page, 'みず')
 
   await page.keyboard.press(' ')

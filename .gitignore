@@ -10,3 +10,4 @@ pnpm-lock.yaml
 *.tsbuildinfo
 fcitx5-online*
 test-results
+predict.db

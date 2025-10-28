@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: 'tests',
   retries: 3,
   expect: {
-    timeout: 10000,
+    timeout: 15000,
   },
   fullyParallel: true,
   webServer: {
@@ -12,4 +12,18 @@ export default defineConfig({
     port: 9000,
     reuseExistingServer: true,
   },
+  projects: [
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium' },
+    },
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' },
+    },
+    {
+      name: 'webkit',
+      use: { browserName: 'webkit' },
+    },
+  ],
 })

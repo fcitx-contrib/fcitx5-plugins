@@ -86,33 +86,10 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 ### librime-lua
 * 输入 `date`，次选为今天日期。
 
-rime.lua
-```lua
-function date_translator(input, seg)
-  if (input == "date") then
-    yield(Candidate("date", seg.start, seg._end, os.date("%Y年%m月%d日"), " 日期"))
-  end
-end
-```
+[rime.lua](../tests/rime/rime.lua)
 
-luna_pinyin.custom.yaml（与 librime-predict librime-qjs 共用）
-```yaml
-patch:
-  engine/translators/+:
-    - lua_translator@date_translator
-    - qjs_translator@date_translator
+[luna_pinyin.custom.yaml](../tests/rime/luna_pinyin.custom.yaml)（与 librime-predict librime-qjs 共用）
 
-  'engine/processors/@before 0': predictor
-  'engine/translators/@before 0': predict_translator
-
-  switches/+:
-    - name: prediction
-      states: [ 关闭预测, 开启预测 ]
-      reset: 1
-
-  predictor:
-    db: predict.db
-```
 ### librime-predict
 * 下载 [predict.db](https://github.com/rime/librime-predict/releases/download/data-1.0/predict.db)
 * 输入 `wo` 空格，上屏 `我`，预测首选 `的`。
@@ -120,19 +97,7 @@ patch:
 ### librime-qjs
 * 输入 `dt`，首选为今天日期时间。
 
-js/date_translator.js
-```js
-export class DateTranslator {
-  translate(input, segment, env) {
-    if (input == 'dt') {
-      return [
-        new Candidate('date', segment.start, segment.end, new Date().toLocaleString(), '', 100)
-      ]
-    }
-    return []
-  }
-}
-```
+[js/date_translator.js](../tests/rime/js/date_translator.js)
 
 ## sayura
 

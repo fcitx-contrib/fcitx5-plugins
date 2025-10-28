@@ -2,17 +2,18 @@
   "name": "fcitx5-plugins",
   "type": "module",
   "scripts": {
-    "lint": "eslint tests",
-    "lint:fix": "eslint --fix tests",
+    "lint": "eslint tests --ignore-pattern 'tests/rime/*'",
+    "lint:fix": "eslint --fix tests --ignore-pattern 'tests/rime/*'",
     "check": "tsc --noEmit",
-    "test": "playwright test --browser all",
-    "test:chromium": "playwright test --browser chromium",
-    "test:firefox": "playwright test --browser firefox",
-    "test:webkit": "playwright test --browser webkit"
+    "test": "playwright test",
+    "test:chromium": "playwright test --project chromium",
+    "test:firefox": "playwright test --project firefox",
+    "test:webkit": "playwright test --project webkit"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
     "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.1",
     "eslint": "^9.38.0",
     "serve": "^14.2.5",
     "typescript": "^5.9.3"

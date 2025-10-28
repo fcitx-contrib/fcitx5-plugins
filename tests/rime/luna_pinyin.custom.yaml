@@ -1,0 +1,15 @@
+patch:
+  engine/translators/+:
+    - lua_translator@date_translator
+    - qjs_translator@date_translator
+
+  'engine/processors/@before 0': predictor
+  'engine/translators/@before 0': predict_translator
+
+  switches/+:
+    - name: prediction
+      states: [ 关闭预测, 开启预测 ]
+      reset: 1
+
+  predictor:
+    db: predict.db

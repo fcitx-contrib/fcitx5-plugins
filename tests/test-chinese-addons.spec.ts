@@ -30,7 +30,7 @@ test('Stroke filter', async ({ page }) => {
   await init(page, 'chinese-addons', '拼音')
 
   await page.keyboard.type('sheng')
-  await expectCandidate(page, '生')
+  await expectCandidate(page, '省')
   await page.keyboard.type('`')
   await page.keyboard.type('h')
   await page.keyboard.type('p')
@@ -52,7 +52,7 @@ test('Punctuation', async ({ page }) => {
   await init(page, 'chinese-addons', '拼音')
 
   await page.keyboard.type('x,')
-  await expectText(page, '向，')
+  await expectText(page, '小，')
 
   await clearText(page)
   await page.keyboard.type('x')

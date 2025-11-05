@@ -9,4 +9,8 @@ test('5j', async ({ page }) => {
 
   await page.keyboard.press(' ')
   await expectText(page, '珠')
+
+  await page.keyboard.press('Enter')
+  await page.keyboard.type(' ')
+  await expectText(page, '珠 ')
 })

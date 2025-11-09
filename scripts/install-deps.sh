@@ -31,13 +31,17 @@ js=(
   boost
   ecm
   fmt
+  glib
   glog
   json
+  json-glib
   leveldb
   libchewing
+  libgee
   libhangul
   libmozc
   librime
+  libskk
   libthai
   lua
   m17n-cmake

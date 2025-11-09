@@ -36,6 +36,7 @@ js=(
   mozc
   rime
   sayura
+  skk
   thai
   unikey
 )
@@ -115,7 +116,7 @@ popd > /dev/null
 cp -r $TARGET_DIR/usr/share/opencc $rime_dir
 
 # skk
-if [[ $PLATFORM == "macos" ]]; then
+if [[ $PLATFORM != "windows" ]]; then
 skk_share_dir=$TARGET_DIR/skk/usr/share
 mkdir -p $skk_share_dir/skk
 cp -r $TARGET_DIR/usr/share/libskk $skk_share_dir
@@ -162,6 +163,7 @@ package lua
 package m17n
 package mozc mozc
 package rime rime
+package skk skk
 fi
 package hallelujah hallelujah
 package sayura sayura
@@ -170,7 +172,6 @@ package unikey unikey
 
 if [[ $PLATFORM == "macos" ]]; then
   package bamboo bamboo
-  package skk skk
 
   # table-extra
   pushd $TARGET_DIR > /dev/null

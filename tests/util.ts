@@ -6,15 +6,18 @@ export async function init(page: Page, plugin: string | string[], im: string, ke
   await expect(page.locator('.my-column > :first-child > * > :nth-child(2) button'), 'Button is enabled on fcitxReady').toBeEnabled()
 
   // Install plugin.
-  await page.locator('.my-column > :first-child > * > :nth-child(6)').click()
-  const [fileChooser] = await Promise.all([
-    page.waitForEvent('filechooser'),
-    page.locator('.n-upload-trigger').click(),
-  ])
   const plugins = Array.isArray(plugin) ? plugin : [plugin]
-  await fileChooser.setFiles(plugins.map(p => `build/js/${p}.zip`))
-  await expect(page.getByText(`Installed ${plugins[plugins.length - 1]}`), 'Ensure plugin is installed').toBeVisible()
-  await page.keyboard.press('Escape')
+  if (plugins.length > 0) {
+    await page.locator('.my-column > :first-child > * > :nth-child(6)').click()
+    const [fileChooser] = await Promise.all([
+      page.waitForEvent('filechooser'),
+      page.locator('.n-upload-trigger').click(),
+    ])
+
+    await fileChooser.setFiles(plugins.map(p => `build/js/${p}.zip`))
+    await expect(page.getByText(`Installed ${plugins[plugins.length - 1]}`), 'Ensure plugin is installed').toBeVisible()
+    await page.keyboard.press('Escape')
+  }
 
   if (im) {
     // Select IM if it's added by default.

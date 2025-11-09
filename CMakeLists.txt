@@ -209,12 +209,14 @@ endif()
 
 # skk
 if (SKK)
-if (NOT EMSCRIPTEN)
 set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/SKK-JISYO.L" CACHE STRING "")
 add_subdirectory(fcitx5-skk)
 target_include_directories(skk PRIVATE "${PREBUILDER_INCLUDE_DIR}/gee-0.8")
-target_link_libraries(skk "-L${PREBUILDER_LIB_DIR}" -lgee-0.8 -lffi -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lz -lresolv)
+set(SKK_LINK_LIBS "-L${PREBUILDER_LIB_DIR}" -lgee-0.8 -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lz)
+if (APPLE)
+    list(APPEND SKK_LINK_LIBS -lresolv)
 endif()
+target_link_libraries(skk ${SKK_LINK_LIBS})
 endif()
 
 # table-extra

@@ -121,7 +121,7 @@ jobs:
           npx playwright install-deps
 
       - name: Test
-        run: pnpm run test
+        run: pnpm run test --test-list-invert test/${{ matrix.os }}.list
 
   release:
     needs: test

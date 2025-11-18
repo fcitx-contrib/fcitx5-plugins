@@ -8,6 +8,7 @@ option(CHEWING "" ON)
 option(CHINESE_ADDONS "" ON)
 option(HALLELUJAH "" ON)
 option(HANGUL "" ON)
+option(JYUTPING "" ON)
 option(M17N "" ON)
 option(MOZC "" ON)
 option(RIME "" ON)
@@ -35,6 +36,7 @@ if (NOT APPLE) # On macOS compile prefix is the same with runtime prefix.
     set(Fcitx5Utils_DIR "${PROJECT_SOURCE_DIR}/cmake")
 endif()
 
+set(Fcitx5ModulePunctuation_DIR "${PROJECT_SOURCE_DIR}/cmake")
 # We don't build testing frontends so fake it.
 set(Fcitx5ModuleTestFrontend_DIR "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -89,7 +91,7 @@ add_subdirectory(fcitx5-chewing)
 endif()
 
 # lua and chinese-addons
-if (CHINESE_ADDONS)
+if (CHINESE_ADDONS OR JYUTPING)
 option(USE_DLOPEN "" OFF)
 add_subdirectory(fcitx5-lua)
 
@@ -128,6 +130,11 @@ set_target_properties(Hangul_static PROPERTIES
 )
 set(HANGUL_TARGET Hangul_static)
 add_subdirectory(fcitx5-hangul)
+endif()
+
+# jyutping
+if (JYUTPING)
+add_subdirectory(fcitx5-jyutping)
 endif()
 
 # m17n

@@ -7,6 +7,7 @@ macos=(
   chinese-addons
   hallelujah
   hangul
+  jyutping
   lua
   m17n
   mozc
@@ -31,6 +32,7 @@ js=(
   chinese-addons
   hallelujah
   hangul
+  jyutping
   lua
   m17n
   mozc
@@ -73,6 +75,11 @@ package() {
   popd > /dev/null
 }
 
+cache_plugin() {
+  local file=$1
+  [[ -f $ROOT/cache/$file ]] || wget -P $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
+}
+
 for plugin in "${plugins[@]}"; do
   DESTDIR=$TARGET_DIR/$plugin cmake --install build/$TARGET/fcitx5-$plugin
   rm -rf $TARGET_DIR/$plugin/usr/include
@@ -94,8 +101,11 @@ if [[ $PLATFORM == "macos" ]]; then
   extract_dep chinese-addons opencc
 else
   file=chinese-addons-any.tar.bz2
-  [[ -f $ROOT/cache/$file ]] || wget -P $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
+  cache_plugin $file
   tar xf $ROOT/cache/$file -C $TARGET_DIR/chinese-addons/usr lib/libime share/fcitx5/pinyin share/libime share/opencc
+  file=jyutping-any.tar.bz2
+  cache_plugin $file
+  tar xf $ROOT/cache/$file -C $TARGET_DIR/jyutping/usr lib/libime share/libime
 fi
 extract_dep hangul libhangul
 extract_dep m17n m17n-db
@@ -154,11 +164,22 @@ if [[ $PLATFORM == "macos" ]]; then
   cp -r $TARGET_DIR/libime-install/usr/lib/libime $TARGET_DIR/chinese-addons/data/lib
 fi
 
+# jyutping
+if [[ $PLATFORM != "windows" ]]; then
+  rm $TARGET_DIR/jyutping/usr/lib/libIMEJyutping.a
+  if [[ $PLATFORM == "macos" ]]; then
+    # Install zh_HK.lm and zh_HK.lm.predict which are not in share
+    mkdir -p $TARGET_DIR/jyutping/data/lib
+    mv $TARGET_DIR/jyutping/usr/lib/libime $TARGET_DIR/jyutping/data/lib
+  fi
+fi
+
 if [[ $PLATFORM != "windows" ]]; then
 package anthy anthy
 package chewing chewing
 package chinese-addons pinyin
 package hangul hangul
+package jyutping jyutping
 package lua
 package m17n
 package mozc mozc

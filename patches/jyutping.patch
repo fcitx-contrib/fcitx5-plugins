@@ -1,0 +1,136 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8e549b3..644fa57 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,9 +8,12 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${C
+ #########################################
+ # Options
+ #########################################
++option(BUILD_SHARED_LIBS "Build library as shared libs" On)
+ option(ENABLE_ENGINE "Enable input method for fcitx" On)
+ option(ENABLE_TEST "Build Test" On)
+ option(ENABLE_DOC "Build doxygen" Off)
++option(ENABLE_DATA "Build data" On)
++option(ENABLE_TOOLS "Build tools" On)
+ 
+ #########################################
+ # Dependency
+@@ -50,8 +53,12 @@ if(ENABLE_TEST)
+ endif()
+ 
+ add_subdirectory(src)
+-add_subdirectory(tools)
+-add_subdirectory(data)
++if (ENABLE_TOOLS)
++    add_subdirectory(tools)
++endif()
++if (ENABLE_DATA)
++    add_subdirectory(data)
++endif()
+ 
+ if (ENABLE_DOC)
+   find_package(Doxygen REQUIRED)
+diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
+index 4310a54..f016e93 100644
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -4,9 +4,9 @@ set(DICT_URL "https://download.fcitx-im.org/data/${DICT_TAR}")
+ set(MODEL_TAR "jyutping-model-20180103.tar.xz")
+ set(MODEL_URL "https://download.fcitx-im.org/data/${MODEL_TAR}")
+ 
+-fcitx5_download(dict-download ${DICT_URL} ${DICT_TAR}
++fcitx5_download(jyutping-dict-download ${DICT_URL} ${DICT_TAR}
+                 e3a5b13edb8efa2f764245a3232f99ba7e7670e22b8cbe666a4fffa84b35f35b)
+-fcitx5_extract(dict-extract ${DICT_TAR} DEPENDS dict-download
++fcitx5_extract(jyutping-dict-extract ${DICT_TAR} DEPENDS jyutping-dict-download
+                 OUTPUT words.txt)
+ 
+ fcitx5_download(model-download ${MODEL_URL} ${MODEL_TAR}
+@@ -36,6 +36,6 @@ add_custom_command(
+   OUTPUT "${DICT_OUTPUT}"
+   DEPENDS "${DICT_SRC}" LibIME::jyutpingdict
+   COMMAND LibIME::jyutpingdict "${DICT_SRC}" "${DICT_OUTPUT}")
+-add_custom_target(dict ALL DEPENDS "${DICT_OUTPUT}")
++add_custom_target(jyutping-dict ALL DEPENDS "${DICT_OUTPUT}")
+ install(FILES "${DICT_OUTPUT}" DESTINATION "${LIBIME_JYUTPING_INSTALL_PKGDATADIR}")
+ install(FILES "${LM_OUTPUT}" "${LM_PREDICT_OUTPUT}" DESTINATION "${LIBIME_JYUTPING_INSTALL_LIBDATADIR}")
+diff --git a/src/engine/engine.h b/src/engine/engine.h
+index d5bac3a..13ec6d8 100644
+--- a/src/engine/engine.h
++++ b/src/engine/engine.h
+@@ -24,41 +24,42 @@ namespace fcitx {
+ 
+ FCITX_CONFIGURATION(
+     JyutpingEngineConfig,
+-    Option<int, IntConstrain> pageSize{this, "PageSize", "Page size", 5,
+-                                       IntConstrain(3, 10)};
+-    Option<int, IntConstrain> predictionSize{
+-        this, "PredictionSize", "Prediction Size", 10, IntConstrain(3, 20)};
+-    Option<bool> predictionEnabled{this, "Prediction", "Enable Prediction ",
++    Option<int, IntConstrain> pageSize{
++        this, "PageSize", _("Candidates Per Page"), 5, IntConstrain(3, 10)};
++    Option<int, IntConstrain> predictionSize{this, "PredictionSize",
++                                             _("Number of Predictions"), 10,
++                                             IntConstrain(3, 20)};
++    Option<bool> predictionEnabled{this, "Prediction", _("Enable Prediction"),
+                                    false};
+     KeyListOption prevPage{
+         this,
+         "PrevPage",
+-        "Prev Page",
++        _("Previous Page"),
+         {Key(FcitxKey_minus), Key(FcitxKey_Up)},
+         KeyListConstrain({KeyConstrainFlag::AllowModifierLess})};
+     KeyListOption nextPage{
+         this,
+         "NextPage",
+-        "Next Page",
++        _("Next Page"),
+         {Key(FcitxKey_equal), Key(FcitxKey_Down)},
+         KeyListConstrain({KeyConstrainFlag::AllowModifierLess})};
+     KeyListOption prevCandidate{
+         this,
+         "PrevCandidate",
+-        "Prev Candidate",
++        _("Previous Candidate"),
+         {Key("Shift+Tab")},
+         KeyListConstrain({KeyConstrainFlag::AllowModifierLess})};
+     KeyListOption nextCandidate{
+         this,
+         "NextCandidate",
+-        "Next Candidate",
++        _("Next Candidate"),
+         {Key("Tab")},
+         KeyListConstrain({KeyConstrainFlag::AllowModifierLess})};
+     Option<int, IntConstrain> nbest{this, "Number of sentence",
+-                                    "Number of Sentence", 2,
++                                    _("Number of Sentences"), 2,
+                                     IntConstrain(1, 3)};
+     Option<bool> inner{this, "InnerSegment",
+-                       "Use Inner Segment Jyutping Settings", true};);
++                       _("Use Inner Segment Jyutping Settings"), true};);
+ 
+ class JyutpingState;
+ class EventSourceTime;
+diff --git a/src/libime/jyutping/CMakeLists.txt b/src/libime/jyutping/CMakeLists.txt
+index f94366d..d5b2700 100644
+--- a/src/libime/jyutping/CMakeLists.txt
++++ b/src/libime/jyutping/CMakeLists.txt
+@@ -24,7 +24,7 @@ set(LIBIME_JYUTPING_SRCS
+     jyutpingmatchstate.cpp
+     )
+ 
+-add_library(IMEJyutping SHARED ${LIBIME_JYUTPING_SRCS})
++add_library(IMEJyutping ${LIBIME_JYUTPING_SRCS})
+ set_target_properties(IMEJyutping
+                       PROPERTIES VERSION ${IMEJyutping_VERSION}
+                       SOVERSION ${IMEJyutping_SOVERSION}
+@@ -35,7 +35,7 @@ target_include_directories(IMEJyutping PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}/LibIME>)
+ 
+-target_link_libraries(IMEJyutping PUBLIC Fcitx5::Utils Boost::boost LibIME::Core PRIVATE Boost::iostreams PkgConfig::ZSTD)
++target_link_libraries(IMEJyutping PUBLIC Fcitx5::Utils Boost::boost LibIME::Core PRIVATE PkgConfig::ZSTD)
+ 
+ install(TARGETS IMEJyutping EXPORT LibIMEJyutpingTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
+ install(FILES ${LIBIME_JYUTPING_HDRS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/LibIME/libime/jyutping" COMPONENT header)

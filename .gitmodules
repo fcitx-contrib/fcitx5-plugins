@@ -61,3 +61,6 @@
 [submodule "windows-cross"]
 	path = windows-cross
 	url = https://github.com/fcitx-contrib/windows-cross
+[submodule "fcitx5-jyutping"]
+	path = fcitx5-jyutping
+	url = https://github.com/fcitx/libime-jyutping

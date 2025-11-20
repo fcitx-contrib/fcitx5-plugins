@@ -19,11 +19,11 @@ jobs:
           - { arch: x86_64, goarch: amd64 }
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           repository: google/mozc

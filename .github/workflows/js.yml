@@ -14,18 +14,18 @@ jobs:
     env:
       EMSCRIPTEN_VERSION: '4.0.20'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           repository: google/mozc
           path: fcitx5-mozc/mozc
           ref: ${{ inputs.mozc_sha }}
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           repository: emscripten-core/emsdk
           path: emsdk
@@ -98,7 +98,7 @@ jobs:
           - { os: macos-26 }
           - { os: windows-2025 }
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v6
         with:

@@ -63,6 +63,10 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 
 * 输入 `gksrmf` 空格，上屏 `한글 `。
 
+## jyutping
+
+* 输入 `jyutping` 空格，上屏 `粤拼`。
+
 ## lua
 
 * 拼音输入 `riqi`，三选为今天日期。

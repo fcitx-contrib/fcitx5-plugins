@@ -19,6 +19,12 @@
 [submodule "fcitx5-hangul"]
 	path = fcitx5-hangul
 	url = https://github.com/fcitx/fcitx5-hangul
+[submodule "fcitx5-jyutping"]
+	path = fcitx5-jyutping
+	url = https://github.com/fcitx/libime-jyutping
+[submodule "fcitx5-keyman"]
+	path = fcitx5-keyman
+	url = https://github.com/fcitx/fcitx5-keyman
 [submodule "fcitx5-lua"]
 	path = fcitx5-lua
 	url = https://github.com/fcitx/fcitx5-lua
@@ -61,6 +67,3 @@
 [submodule "windows-cross"]
 	path = windows-cross
 	url = https://github.com/fcitx-contrib/windows-cross
-[submodule "fcitx5-jyutping"]
-	path = fcitx5-jyutping
-	url = https://github.com/fcitx/libime-jyutping

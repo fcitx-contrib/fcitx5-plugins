@@ -9,6 +9,7 @@ option(CHINESE_ADDONS "" ON)
 option(HALLELUJAH "" ON)
 option(HANGUL "" ON)
 option(JYUTPING "" ON)
+option(KEYMAN "" ON)
 option(M17N "" ON)
 option(MOZC "" ON)
 option(RIME "" ON)
@@ -135,6 +136,11 @@ endif()
 # jyutping
 if (JYUTPING)
 add_subdirectory(fcitx5-jyutping)
+endif()
+
+# keyman
+if (KEYMAN)
+add_subdirectory(fcitx5-keyman)
 endif()
 
 # m17n

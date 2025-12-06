@@ -8,6 +8,7 @@ macos=(
   hallelujah
   hangul
   jyutping
+  keyman
   lua
   m17n
   mozc
@@ -33,6 +34,7 @@ js=(
   hallelujah
   hangul
   jyutping
+  keyman
   lua
   m17n
   mozc
@@ -180,6 +182,7 @@ package chewing chewing
 package chinese-addons pinyin
 package hangul hangul
 package jyutping jyutping
+package keyman
 package lua
 package m17n
 package mozc mozc

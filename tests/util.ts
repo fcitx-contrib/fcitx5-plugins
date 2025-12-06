@@ -20,7 +20,7 @@ export async function init(page: Page, plugin: string | string[], im?: string, k
     ])
 
     await fileChooser.setFiles(plugins.map(p => `build/js/${p}.zip`))
-    await Promise.all(plugins.map(plugin => expect(page.getByText(`Installed ${plugin}`), 'Ensure plugin is installed').toBeVisible()))
+    await Promise.all(plugins.map(plugin => expect(page.locator('.n-message').getByText(`Installed ${plugin}`), 'Ensure plugin is installed').toBeVisible()))
     await page.keyboard.press('Escape')
   }
 

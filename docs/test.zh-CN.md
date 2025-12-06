@@ -67,6 +67,12 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 
 * 输入 `jyutping` 空格，上屏 `粤拼`。
 
+## keyman
+
+在 `~/Library/fcitx5/share` 放入 [keyman](../tests/keyman)，
+添加 `世界语（萧伯纳式文）` -> `EUJMO (Keyman)`。
+* 输入 `q` `Q` `Ctrl+Shift+q` `Ctrl+Alt+Shift+q` 上屏 `𐑖𐑻ŝŜ`。
+
 ## lua
 
 * 拼音输入 `riqi`，三选为今天日期。

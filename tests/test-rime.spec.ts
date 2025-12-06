@@ -1,14 +1,9 @@
 import type { Page } from '@playwright/test'
-import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
-import { clearText, expectCandidate, expectText, init, selectOption } from './util'
+import { clearText, expectCandidate, expectText, init, mkdirTree, selectOption, uploadFile } from './util'
 
-function uploadFile(page: Page, path: string) {
-  const content = new Uint8Array(readFileSync(`tests/rime/${path}`))
-  return page.evaluate(({ content, path }) => {
-    // @ts-expect-error fcitx API
-    window.fcitx.Module.FS.writeFile(`/home/web_user/.local/share/fcitx5/rime/${path}`, content)
-  }, { content, path })
+function uploadRimeFile(page: Page, path: string) {
+  return uploadFile(page, `rime/${path}`, `/home/web_user/.local/share/fcitx5/rime/${path}`)
 }
 
 test('Rime', async ({ page }) => {
@@ -33,12 +28,11 @@ test('Rime', async ({ page }) => {
   await page.keyboard.press('Escape')
 
   // Redeploy with patches
-  await uploadFile(page, 'rime.lua')
-  await uploadFile(page, 'luna_pinyin.custom.yaml')
-  await uploadFile(page, 'predict.db')
-  // @ts-expect-error fcitx API
-  await page.evaluate(() => window.fcitx.Module.FS.mkdir('/home/web_user/.local/share/fcitx5/rime/js'))
-  await uploadFile(page, 'js/date_translator.js')
+  await uploadRimeFile(page, 'rime.lua')
+  await uploadRimeFile(page, 'luna_pinyin.custom.yaml')
+  await uploadRimeFile(page, 'predict.db')
+  await mkdirTree(page, '/home/web_user/.local/share/fcitx5/rime/js')
+  await uploadRimeFile(page, 'js/date_translator.js')
   await expect(readyLocator).toHaveCount(0)
   // @ts-expect-error fcitx API
   await page.evaluate(() => window.fcitx.setConfig('fcitx://config/addon/rime/deploy', '{}'))

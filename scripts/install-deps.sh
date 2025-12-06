@@ -8,6 +8,7 @@ macos=(
   glog
   json
   json-glib
+  keyman-core
   leveldb
   libchewing
   libgee
@@ -35,6 +36,7 @@ js=(
   glog
   json
   json-glib
+  keyman-core
   leveldb
   libchewing
   libgee

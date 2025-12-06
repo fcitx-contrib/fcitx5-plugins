@@ -11,10 +11,10 @@
     "test:webkit": "playwright test --project webkit"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.0.0",
-    "@playwright/test": "^1.56.1",
-    "@types/node": "^24.9.1",
-    "eslint": "^9.38.0",
+    "@antfu/eslint-config": "^6.4.2",
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
     "serve": "^14.2.5",
     "typescript": "^5.9.3"
   }

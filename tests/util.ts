@@ -1,9 +1,14 @@
 import type { Page } from '@playwright/test'
+import { readFileSync } from 'node:fs'
 import { expect } from '@playwright/test'
 
-export async function init(page: Page, plugin: string | string[], im: string, key?: string) {
+export async function init(page: Page, plugin: string | string[], im?: string, key?: string, prepare?: () => Promise<any>) {
   await page.goto('http://localhost:9000')
   await expect(page.locator('.my-column > :first-child > * > :nth-child(2) button'), 'Button is enabled on fcitxReady').toBeEnabled()
+
+  if (prepare) {
+    await prepare()
+  }
 
   // Install plugin.
   const plugins = Array.isArray(plugin) ? plugin : [plugin]
@@ -48,4 +53,19 @@ export function expectText(page: Page, text: string | RegExp) {
 
 export function clearText(page: Page) {
   return page.locator('.n-input .n-base-icon').click()
+}
+
+export function mkdirTree(page: Page, path: string) {
+  return page.evaluate(({ path }) => {
+    // @ts-expect-error fcitx API
+    window.fcitx.Module.FS.mkdirTree(path)
+  }, { path })
+}
+
+export function uploadFile(page: Page, src: string, dst: string) {
+  const content = new Uint8Array(readFileSync(`tests/${src}`))
+  return page.evaluate(({ content, dst }) => {
+    // @ts-expect-error fcitx API
+    window.fcitx.Module.FS.writeFile(dst, content)
+  }, { content, dst })
 }

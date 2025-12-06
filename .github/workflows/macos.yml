@@ -67,6 +67,7 @@ jobs:
         run: |
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
+          git apply --directory=fcitx5-keyman patches/keyman.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
           cmake --build build/macos-${{ matrix.arch }}

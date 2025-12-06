@@ -1,0 +1,85 @@
+{
+  "system": {
+    "keymanDeveloperVersion": "16.0.138.0",
+    "fileVersion": "7.0"
+  },
+  "options": {
+    "readmeFile": "readme.htm"
+  },
+  "info": {
+    "version": {
+      "description": "1.0"
+    },
+    "name": {
+      "description": "EUJMO"
+    },
+    "copyright": {
+      "description": "Kreis Johannes \u011Cenber\u011D"
+    }
+  },
+  "files": [
+    {
+      "name": "esperanto_sava_eujao.js",
+      "description": "File esperanto_sava_eujao.js"
+    },
+    {
+      "name": "esperanto_sava_eujao.kvk",
+      "description": "File esperanto_sava_eujao.kvk"
+    },
+    {
+      "name": "esperanto_sava_eujao.kmx",
+      "description": "Keyboard EUJMO"
+    },
+    {
+      "name": "readme.htm",
+      "description": "File readme.htm"
+    },
+    {
+      "name": "NotoSansShavian-Regular.ttf",
+      "description": "Font Noto Sans Shavian Regular"
+    },
+    {
+      "name": "LayoutU_.png",
+      "description": "File LayoutU_.png"
+    },
+    {
+      "name": "LayoutU_S.png",
+      "description": "File LayoutU_S.png"
+    },
+    {
+      "name": "LayoutU_SC.png",
+      "description": "File LayoutU_SC.png"
+    },
+    {
+      "name": "LayoutU_SCA.png",
+      "description": "File LayoutU_SCA.png"
+    },
+    {
+      "name": "welcome.htm",
+      "description": "File welcome.htm"
+    },
+    {
+      "name": "kmp.inf",
+      "description": "Package information"
+    },
+    {
+      "name": "kmp.json",
+      "description": "Package information (JSON)"
+    }
+  ],
+  "keyboards": [
+    {
+      "name": "EUJMO",
+      "id": "esperanto_sava_eujao",
+      "version": "1.0",
+      "oskFont": "NotoSansShavian-Regular.ttf",
+      "displayFont": "NotoSansShavian-Regular.ttf",
+      "languages": [
+        {
+          "name": "Esperanto (Shavian)",
+          "id": "eo-Shaw"
+        }
+      ]
+    }
+  ]
+}

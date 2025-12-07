@@ -59,7 +59,6 @@ jobs:
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
-          git apply --directory=fcitx5-keyman patches/keyman.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-rime patches/rime.js.patch
           emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release

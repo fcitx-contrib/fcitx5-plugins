@@ -25,6 +25,9 @@
 [submodule "fcitx5-keyman"]
 	path = fcitx5-keyman
 	url = https://github.com/fcitx/fcitx5-keyman
+[submodule "fcitx5-kkc"]
+	path = fcitx5-kkc
+	url = https://github.com/fcitx/fcitx5-kkc
 [submodule "fcitx5-lua"]
 	path = fcitx5-lua
 	url = https://github.com/fcitx/fcitx5-lua

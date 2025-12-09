@@ -1,0 +1,16 @@
+diff --git a/src/kkc.cpp b/src/kkc.cpp
+index 3924b92..0d40f7b 100644
+--- a/src/kkc.cpp
++++ b/src/kkc.cpp
+@@ -637,6 +637,11 @@ void KkcEngine::loadDictionary() {
+         }
+ 
+         if (mode == 1) {
++            std::string_view partialpath = path;
++            if (stringutils::consumePrefix(partialpath, "$XDG_DATA_DIRS/")) {
++                path = StandardPaths::global().locate(StandardPathsType::Data,
++                                                      partialpath);
++            }
+             auto dict = makeGObjectUnique(reinterpret_cast<KkcDictionary *>(
+                 kkc_system_segment_dictionary_new(path.c_str(), "EUC-JP",
+                                                   NULL)));

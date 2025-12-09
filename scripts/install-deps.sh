@@ -13,6 +13,7 @@ macos=(
   libchewing
   libgee
   libhangul
+  libkkc
   libmozc
   librime
   libskk
@@ -41,6 +42,7 @@ js=(
   libchewing
   libgee
   libhangul
+  libkkc
   libmozc
   librime
   libskk

@@ -9,6 +9,7 @@ macos=(
   hangul
   jyutping
   keyman
+  kkc
   lua
   m17n
   mozc
@@ -35,6 +36,7 @@ js=(
   hangul
   jyutping
   keyman
+  kkc
   lua
   m17n
   mozc
@@ -55,7 +57,7 @@ extract_dep() {
   local plugin=$1
   local dep=$2
   local file=$dep$POSTFIX.tar.bz2
-  tar xjf $CACHE_DIR/$file -C $TARGET_DIR/$plugin/usr --exclude include --exclude lib
+  tar xf $CACHE_DIR/$file -C $TARGET_DIR/$plugin/usr --exclude include --exclude lib
 }
 
 package() {
@@ -79,7 +81,7 @@ package() {
 
 cache_plugin() {
   local file=$1
-  [[ -f $ROOT/cache/$file ]] || wget -P $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
+  [[ -f $ROOT/cache/$file ]] || curl -LO --output-dir $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
 }
 
 for plugin in "${plugins[@]}"; do
@@ -133,7 +135,7 @@ skk_share_dir=$TARGET_DIR/skk/usr/share
 mkdir -p $skk_share_dir/skk
 cp -r $TARGET_DIR/usr/share/libskk $skk_share_dir
 skk_dict=SKK-JISYO.L.gz
-[[ -f $ROOT/cache/$skk_dict ]] || wget -P $ROOT/cache https://skk-dev.github.io/dict/$skk_dict
+[[ -f $ROOT/cache/$skk_dict ]] || curl -LO --output-dir $ROOT/cache https://skk-dev.github.io/dict/$skk_dict
 gunzip -fc $ROOT/cache/$skk_dict > $skk_share_dir/skk/SKK-JISYO.L
 fi
 fi
@@ -176,6 +178,18 @@ if [[ $PLATFORM != "windows" ]]; then
   fi
 fi
 
+# kkc
+if [[ $PLATFORM != "windows" ]]; then
+  libkkc_data=libkkc-data.tar.bz2
+  [[ -f $ROOT/cache/$libkkc_data ]] || curl -LO --output-dir $ROOT/cache https://github.com/fcitx-contrib/libkkc-data/releases/download/latest/$libkkc_data
+  # Model files are under lib/
+  if [[ $PLATFORM == "macos" ]]; then
+    tar xf $ROOT/cache/$libkkc_data -C $TARGET_DIR/kkc/data
+  else
+    tar xf $ROOT/cache/$libkkc_data -C $TARGET_DIR/kkc/usr
+  fi
+fi
+
 if [[ $PLATFORM != "windows" ]]; then
 package anthy anthy
 package chewing chewing
@@ -183,6 +197,7 @@ package chinese-addons pinyin
 package hangul hangul
 package jyutping jyutping
 package keyman
+package kkc kkc
 package lua
 package m17n
 package mozc mozc

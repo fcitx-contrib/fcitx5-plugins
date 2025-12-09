@@ -51,7 +51,8 @@ if (APPLE)
         "${FIND_ROOT_PATH}"
     )
     set(CMAKE_INSTALL_RPATH "${APP_CONTENTS_PATH}/lib") # scel2org5, libime_*
-    set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # skk, kkc
+    set(SKK_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # skk
+    set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # kkc
 elseif (WIN32)
     list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/relative")
     add_compile_definitions(-DFcitx5Core_EXPORTS -DFcitx5Utils_EXPORTS)

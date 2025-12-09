@@ -10,6 +10,7 @@ option(HALLELUJAH "" ON)
 option(HANGUL "" ON)
 option(JYUTPING "" ON)
 option(KEYMAN "" ON)
+option(KKC "" ON)
 option(M17N "" ON)
 option(MOZC "" ON)
 option(RIME "" ON)
@@ -50,6 +51,8 @@ if (APPLE)
         "${FIND_ROOT_PATH}"
     )
     set(CMAKE_INSTALL_RPATH "${APP_CONTENTS_PATH}/lib") # scel2org5, libime_*
+    set(SKK_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # skk
+    set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # kkc
 elseif (WIN32)
     list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/relative")
     add_compile_definitions(-DFcitx5Core_EXPORTS -DFcitx5Utils_EXPORTS)
@@ -143,6 +146,12 @@ if (KEYMAN)
 add_subdirectory(fcitx5-keyman)
 endif()
 
+# kkc
+if (KKC)
+add_subdirectory(fcitx5-kkc)
+target_link_libraries(kkc "${PREBUILDER_LIB_DIR}/libmarisa.a")
+endif()
+
 # m17n
 if (M17N)
 add_library(m17n_static STATIC IMPORTED)
@@ -222,7 +231,6 @@ endif()
 
 # skk
 if (SKK)
-set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/SKK-JISYO.L" CACHE STRING "")
 add_subdirectory(fcitx5-skk)
 target_include_directories(skk PRIVATE "${PREBUILDER_INCLUDE_DIR}/gee-0.8")
 set(SKK_LINK_LIBS "-L${PREBUILDER_LIB_DIR}" -lgee-0.8 -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lz)

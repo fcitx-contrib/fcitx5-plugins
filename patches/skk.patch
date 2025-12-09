@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a44053f..9d08988 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,7 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+ 
+ include("${FCITX_INSTALL_CMAKECONFIG_DIR}/Fcitx5Utils/Fcitx5CompilerSettings.cmake")
+ 
+-set(SKK_DEFAULT_PATH "/usr/share/skk/SKK-JISYO.L" CACHE STRING "Default path of SKK")
++set(SKK_PATH "/usr/share/skk/" CACHE STRING "Default path of SKK directory that has SKK-JISYO.L, could start with \$XDG_DATA_DIRS/")
+ 
+ include(GNUInstallDirs)
+ 
+diff --git a/src/dictionary_list.in b/src/dictionary_list.in
+index c12a4e5..e8a925e 100644
+--- a/src/dictionary_list.in
++++ b/src/dictionary_list.in
+@@ -1,2 +1,2 @@
+ type=file,file=$FCITX_CONFIG_DIR/skk/user.dict,mode=readwrite
+-type=file,file=@SKK_DEFAULT_PATH@,mode=readonly
++type=file,file=@SKK_PATH@SKK-JISYO.L,mode=readonly

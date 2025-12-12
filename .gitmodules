@@ -13,6 +13,9 @@
 [submodule "fcitx5-chinese-addons"]
 	path = fcitx5-chinese-addons
 	url = https://github.com/fcitx/fcitx5-chinese-addons
+[submodule "fcitx5-cskk"]
+	path = fcitx5-cskk
+	url = https://github.com/fcitx/fcitx5-cskk
 [submodule "fcitx5-hallelujah"]
 	path = fcitx5-hallelujah
 	url = https://github.com/fcitx-contrib/fcitx5-hallelujah

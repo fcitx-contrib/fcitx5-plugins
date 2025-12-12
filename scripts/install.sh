@@ -5,6 +5,7 @@ macos=(
   bamboo
   chewing
   chinese-addons
+  cskk
   hallelujah
   hangul
   jyutping
@@ -32,6 +33,7 @@ js=(
   anthy
   chewing
   chinese-addons
+  cskk
   hallelujah
   hangul
   jyutping
@@ -111,6 +113,7 @@ else
   cache_plugin $file
   tar xf $ROOT/cache/$file -C $TARGET_DIR/jyutping/usr lib/libime share/libime
 fi
+extract_dep cskk cskk
 extract_dep hangul libhangul
 extract_dep m17n m17n-db
 # JS doesn't embed mozc.data to libmozc.so.
@@ -194,6 +197,7 @@ if [[ $PLATFORM != "windows" ]]; then
 package anthy anthy
 package chewing chewing
 package chinese-addons pinyin
+package cskk cskk
 package hangul hangul
 package jyutping jyutping
 package keyman

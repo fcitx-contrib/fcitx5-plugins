@@ -3,6 +3,7 @@ set -e
 macos=(
   anthy-cmake
   boost
+  cskk
   fmt
   glib
   glog
@@ -31,6 +32,7 @@ macos=(
 js=(
   anthy-cmake
   boost
+  cskk
   ecm
   fmt
   glib

@@ -6,6 +6,7 @@ option(ANTHY "" ON)
 option(BAMBOO "" ON)
 option(CHEWING "" ON)
 option(CHINESE_ADDONS "" ON)
+option(CSKK "" ON)
 option(HALLELUJAH "" ON)
 option(HANGUL "" ON)
 option(JYUTPING "" ON)
@@ -118,6 +119,10 @@ if (EMSCRIPTEN)
     target_link_libraries(pinyinhelper -fexceptions)
     target_link_libraries(punctuation -fexceptions)
 endif()
+endif()
+
+if (CSKK)
+add_subdirectory(fcitx5-cskk)
 endif()
 
 # hallelujah

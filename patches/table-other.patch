@@ -1,0 +1,13 @@
+diff --git a/tables/CMakeLists.txt b/tables/CMakeLists.txt
+index f1449b5..5d79ea1 100644
+--- a/tables/CMakeLists.txt
++++ b/tables/CMakeLists.txt
+@@ -58,7 +58,7 @@ foreach(table ${TABLE_NAMES})
+   set(CONF_FILES ${CONF_FILES} "${conf_file}")
+ endforeach()
+ 
+-add_custom_target(table_data ALL DEPENDS ${MB_FILES})
++add_custom_target(table_other_data ALL DEPENDS ${MB_FILES})
+ 
+ install(FILES ${CONF_FILES} DESTINATION "${FCITX_INSTALL_PKGDATADIR}/inputmethod")
+ install(FILES ${MB_FILES} DESTINATION "${FCITX_INSTALL_PKGDATADIR}/table")

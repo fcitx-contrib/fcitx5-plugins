@@ -64,6 +64,9 @@
 [submodule "fcitx5-table-extra"]
 	path = fcitx5-table-extra
 	url = https://github.com/fcitx/fcitx5-table-extra
+[submodule "fcitx5-table-other"]
+	path = fcitx5-table-other
+	url = https://github.com/fcitx/fcitx5-table-other
 [submodule "fcitx5-thai"]
 	path = fcitx5-thai
 	url = https://github.com/fcitx/fcitx5-libthai

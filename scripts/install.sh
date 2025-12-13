@@ -18,6 +18,7 @@ macos=(
   sayura
   skk
   table-extra
+  table-other
   thai
   unikey
 )
@@ -146,7 +147,7 @@ fi
 if [[ $PLATFORM == "macos" || $PLATFORM == "windows" ]]; then
   # split arch-specific files with data
   for plugin in "${plugins[@]}"; do
-    if [[ $plugin == "table-extra" ]]; then
+    if [[ $plugin == "table-extra" || $plugin == "table-other" ]]; then
       continue
     fi
     pushd $TARGET_DIR/$plugin > /dev/null

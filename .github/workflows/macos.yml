@@ -70,6 +70,7 @@ jobs:
           git apply --directory=fcitx5-kkc patches/kkc.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-skk patches/skk.patch
+          git apply --directory=fcitx5-table-other patches/table-other.patch
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
           cmake --build build/macos-${{ matrix.arch }}
           ./scripts/install.sh macos ${{ matrix.arch }}

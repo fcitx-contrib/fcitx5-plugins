@@ -245,10 +245,11 @@ endif()
 target_link_libraries(skk ${SKK_LINK_LIBS})
 endif()
 
-# table-extra
+# table-extra, # table-other
 if (TABLE_EXTRA)
 if (APPLE) # Universal so unnecessary on other platforms.
     add_subdirectory(fcitx5-table-extra)
+    add_subdirectory(fcitx5-table-other)
 endif()
 endif()
 

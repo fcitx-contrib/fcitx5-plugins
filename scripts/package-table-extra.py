@@ -1,6 +1,6 @@
 import os
 
-plugins = {
+extra_plugins = {
     "array": [
         "array30",
         "array30-large",
@@ -48,6 +48,24 @@ plugins = {
     ]
 }
 
+other_plugins = {
+    "table-amharic": ["amharic"],
+    "table-arabic": ["arabic"],
+    "table-cns11643": ["cns11643"],
+    "table-compose": ["compose"],
+    "table-emoji": ["emoji"],
+    "table-ipa-x-sampa": ["ipa-x-sampa"],
+    "table-latex": ["latex"],
+    "table-malayalam-phonetic": ["malayalam-phonetic"],
+    "table-rustrad": ["rustrad"],
+    "table-tamil-remington": ["tamil-remington"],
+    "table-thai": ["thai"],
+    "table-translit-ua": ["translit-ua"],
+    "table-translit": ["translit"],
+    "table-viqr": ["viqr"],
+    "table-yawerty": ["yawerty"],
+}
+
 
 def ensure(command: str):
     if os.system(command) != 0:
@@ -57,16 +75,17 @@ def ensure(command: str):
 build_dir = os.getcwd()
 
 # split table-extra to plugins and keep directory structures so the package script can be reused
-for plugin, ims in plugins.items():
-    ensure(f"mkdir -p {plugin}/" + "data/share/fcitx5/{inputmethod,table}")
-    ensure(f"mkdir -p {plugin}/usr")
+for repo, plugins in (("table-extra", extra_plugins), ("table-other", other_plugins)):
+    for plugin, ims in plugins.items():
+        ensure(f"mkdir -p {plugin}/" + "data/share/fcitx5/{inputmethod,table}")
+        ensure(f"mkdir -p {plugin}/usr")
 
-    for im in ims:
-        ensure(f"mv table-extra/usr/share/fcitx5/inputmethod/{im}.conf {plugin}/data/share/fcitx5/inputmethod")
-        ensure(f"mv table-extra/usr/share/fcitx5/table/{im}.main.dict {plugin}/data/share/fcitx5/table")
+        for im in ims:
+            ensure(f"mv {repo}/usr/share/fcitx5/inputmethod/{im}.conf {plugin}/data/share/fcitx5/inputmethod")
+            ensure(f"mv {repo}/usr/share/fcitx5/table/{im}.main.dict {plugin}/data/share/fcitx5/table")
 
-    os.chdir(f"{plugin}/usr")
-    ensure(f"python {build_dir}/../../scripts/generate-descriptor.py {ims[0]}")
-    os.chdir("../data")
-    ensure(f"tar cjf {build_dir}/{plugin}-any.tar.bz2 --no-xattrs *")
-    os.chdir(build_dir)
+        os.chdir(f"{plugin}/usr")
+        ensure(f"python {build_dir}/../../scripts/generate-descriptor.py {ims[0]}")
+        os.chdir("../data")
+        ensure(f"tar cjf {build_dir}/{plugin}-any.tar.bz2 --no-xattrs *")
+        os.chdir(build_dir)

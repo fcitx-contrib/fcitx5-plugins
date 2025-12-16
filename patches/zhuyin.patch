@@ -1,0 +1,54 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8336d50..ca40c0d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,9 +37,7 @@ include("${FCITX_INSTALL_CMAKECONFIG_DIR}/Fcitx5Utils/Fcitx5CompilerSettings.cma
+ 
+ add_subdirectory(po)
+ add_subdirectory(src)
+-add_subdirectory(data)
+ enable_testing()
+-add_subdirectory(test)
+ 
+ fcitx5_translate_desktop_file(org.fcitx.Fcitx5.Addon.Zhuyin.metainfo.xml.in
+                               org.fcitx.Fcitx5.Addon.Zhuyin.metainfo.xml XML)
+diff --git a/src/zhuyinengine.cpp b/src/zhuyinengine.cpp
+index c886797..d0e220c 100644
+--- a/src/zhuyinengine.cpp
++++ b/src/zhuyinengine.cpp
+@@ -306,17 +306,17 @@ ZhuyinEngine::ZhuyinEngine(Instance *instance)
+     : instance_(instance), factory_([this](InputContext &ic) {
+           return new ZhuyinState(this, &ic);
+       }) {
+-    auto userDir =
+-        StandardPaths::global().userDirectory(StandardPathsType::PkgData) /
+-        "zhuyin";
++    const auto &sp = StandardPaths::global();
++    auto userDir = sp.userDirectory(StandardPathsType::PkgData) / "zhuyin";
+     if (!fs::makePath(userDir)) {
+         if (fs::isdir(userDir)) {
+             ZHUYIN_DEBUG() << "Failed to create user directory: " << userDir;
+         }
+     }
+-    context_.reset(zhuyin_init(
+-        StandardPaths::fcitxPath("pkgdatadir", "zhuyin").string().c_str(),
+-        userDir.string().c_str()));
++    std::string tablePath =
++        sp.locate(StandardPathsType::PkgData, "zhuyin/table.conf");
++    context_.reset(zhuyin_init(fcitx::fs::dirName(tablePath).c_str(),
++                               userDir.string().c_str()));
+ 
+     instance->inputContextManager().registerProperty("zhuyinState", &factory_);
+     reloadConfig();
+@@ -553,11 +553,6 @@ void ZhuyinEngine::reloadConfig() {
+ 
+     zhuyin_set_options(context_.get(), options);
+ 
+-    instance_->inputContextManager().foreach([this](InputContext *ic) {
+-        auto *state = ic->propertyFor(&factory_);
+-        state->reset();
+-        return true;
+-    });
+ 
+     zhuyin_load_phrase_library(context_.get(), USER_DICTIONARY);
+ }

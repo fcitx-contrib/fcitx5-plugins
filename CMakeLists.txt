@@ -20,6 +20,7 @@ option(SKK "" ON)
 option(TABLE_EXTRA "" ON)
 option(THAI "" ON)
 option(UNIKEY "" ON)
+option(ZHUYIN "" ON)
 
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_INSTALL_PREFIX /usr)
@@ -272,4 +273,10 @@ add_subdirectory(fcitx5-unikey)
 if (WIN32)
     target_compile_definitions(unikey-lib PUBLIC -DUNIKEYHOOK)
 endif()
+endif()
+
+# zhuyin
+if (ZHUYIN)
+add_subdirectory(fcitx5-zhuyin)
+target_link_libraries(zhuyin "-L${PREBUILDER_LIB_DIR}" -lkyotocabinet -lz)
 endif()

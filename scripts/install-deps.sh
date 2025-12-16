@@ -10,12 +10,14 @@ macos=(
   json
   json-glib
   keyman-core
+  kyotocabinet
   leveldb
   libchewing
   libgee
   libhangul
   libkkc
   libmozc
+  libpinyin
   librime
   libskk
   libthai
@@ -40,12 +42,14 @@ js=(
   json
   json-glib
   keyman-core
+  kyotocabinet
   leveldb
   libchewing
   libgee
   libhangul
   libkkc
   libmozc
+  libpinyin
   librime
   libskk
   libthai

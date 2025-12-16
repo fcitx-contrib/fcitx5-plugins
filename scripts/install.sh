@@ -21,6 +21,7 @@ macos=(
   table-other
   thai
   unikey
+  zhuyin
 )
 
 windows=(
@@ -48,6 +49,7 @@ js=(
   skk
   thai
   unikey
+  zhuyin
 )
 
 . scripts/platform.sh "$@"
@@ -144,6 +146,13 @@ gunzip -fc $ROOT/cache/$skk_dict > $skk_share_dir/skk/SKK-JISYO.L
 fi
 fi
 
+# zhuyin
+if [[ $PLATFORM != "windows" ]]; then
+  zhuyin_data=zhuyin-data.tar.bz2
+  [[ -f $ROOT/cache/$zhuyin_data ]] || curl -LO --output-dir $ROOT/cache https://github.com/fcitx-contrib/zhuyin-data/releases/download/latest/$zhuyin_data
+  tar xf $ROOT/cache/$zhuyin_data -C $TARGET_DIR/zhuyin/usr
+fi
+
 if [[ $PLATFORM == "macos" || $PLATFORM == "windows" ]]; then
   # split arch-specific files with data
   for plugin in "${plugins[@]}"; do
@@ -208,6 +217,7 @@ package m17n
 package mozc mozc
 package rime rime
 package skk skk
+package zhuyin zhuyin
 fi
 package hallelujah hallelujah
 package sayura sayura

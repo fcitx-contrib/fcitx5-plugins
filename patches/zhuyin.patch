@@ -1,17 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8336d50..ca40c0d 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -37,9 +37,7 @@ include("${FCITX_INSTALL_CMAKECONFIG_DIR}/Fcitx5Utils/Fcitx5CompilerSettings.cma
- 
- add_subdirectory(po)
- add_subdirectory(src)
--add_subdirectory(data)
- enable_testing()
--add_subdirectory(test)
- 
- fcitx5_translate_desktop_file(org.fcitx.Fcitx5.Addon.Zhuyin.metainfo.xml.in
-                               org.fcitx.Fcitx5.Addon.Zhuyin.metainfo.xml XML)
 diff --git a/src/zhuyinengine.cpp b/src/zhuyinengine.cpp
 index c886797..d0e220c 100644
 --- a/src/zhuyinengine.cpp

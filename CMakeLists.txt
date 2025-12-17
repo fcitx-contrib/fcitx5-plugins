@@ -277,6 +277,7 @@ endif()
 
 # zhuyin
 if (ZHUYIN)
+set(ENABLE_DATA OFF)
 add_subdirectory(fcitx5-zhuyin)
 target_link_libraries(zhuyin "-L${PREBUILDER_LIB_DIR}" -lkyotocabinet -lz)
 endif()

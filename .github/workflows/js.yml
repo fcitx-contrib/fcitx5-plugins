@@ -58,7 +58,6 @@ jobs:
           . emsdk/emsdk_env.sh
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
-          git apply --directory=fcitx5-cskk patches/cskk.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
           git apply --directory=fcitx5-kkc patches/kkc.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch

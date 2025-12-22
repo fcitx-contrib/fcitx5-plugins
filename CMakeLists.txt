@@ -53,7 +53,7 @@ if (APPLE)
         "${FIND_ROOT_PATH}"
     )
     set(CMAKE_INSTALL_RPATH "${APP_CONTENTS_PATH}/lib") # scel2org5, libime_*
-    set(SKK_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # skk
+    set(SKK_PATH "$XDG_DATA_DIRS/skk" CACHE STRING "") # skk
     set(SKK_DEFAULT_PATH "$XDG_DATA_DIRS/skk/" CACHE STRING "") # kkc
 elseif (WIN32)
     list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/relative")
@@ -237,6 +237,9 @@ endif()
 
 # skk
 if (SKK)
+if (APPLE)
+    set(SKK_DEFAULT_PATH "") # clear old variable as set by kkc
+endif()
 add_subdirectory(fcitx5-skk)
 target_include_directories(skk PRIVATE "${PREBUILDER_INCLUDE_DIR}/gee-0.8")
 set(SKK_LINK_LIBS "-L${PREBUILDER_LIB_DIR}" -lgee-0.8 -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lz)

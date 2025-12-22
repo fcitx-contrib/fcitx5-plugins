@@ -62,7 +62,6 @@ jobs:
           git apply --directory=fcitx5-kkc patches/kkc.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-rime patches/rime.js.patch
-          git apply --directory=fcitx5-skk patches/skk.patch
           git apply --directory=fcitx5-zhuyin patches/zhuyin.patch
           emcmake cmake -B build/js -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build build/js

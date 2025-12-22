@@ -67,7 +67,6 @@ jobs:
         run: |
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
-          git apply --directory=fcitx5-kkc patches/kkc.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-table-other patches/table-other.patch
           git apply --directory=fcitx5-zhuyin patches/zhuyin.patch

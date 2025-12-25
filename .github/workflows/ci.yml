@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  MOZC_SHA: d9c3f195582de6b0baa07ecb81a04e8902acf9af
+  MOZC_SHA: 3feec1b11cd72d0af182da3f80bc3988a7ec3f10
 
 jobs:
   lint:

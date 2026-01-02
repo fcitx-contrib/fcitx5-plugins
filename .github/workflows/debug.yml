@@ -36,7 +36,7 @@ jobs:
           git submodule update --init fcitx5-rime
           cmake -B build/macos-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }} \
-            -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DHALLELUJAH=OFF -DHANGUL=OFF -DM17N=OFF -DMOZC=OFF -DSAYURA=OFF -DSKK=OFF -DTABLE_EXTRA=OFF -DTHAI=OFF -DUNIKEY=OFF
+            -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DCSKK=OFF -DHALLELUJAH=OFF -DHANGUL=OFF -DJYUTPING=OFF -DKEYMAN=OFF -DKKC=OFF -DM17N=OFF -DMOZC=OFF -DSAYURA=OFF -DSKK=OFF -DTABLE_EXTRA=OFF -DTHAI=OFF -DUNIKEY=OFF -DZHUYIN=OFF
           cmake --build build/macos-${{ matrix.arch }} --target rime
           wget -P cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/rime-${{ matrix.arch }}.tar.bz2
           mkdir build/rime

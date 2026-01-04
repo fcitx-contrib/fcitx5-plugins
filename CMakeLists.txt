@@ -93,6 +93,12 @@ endif()
 
 # chewing
 if (CHEWING)
+add_library(Chewing_static STATIC IMPORTED)
+set_target_properties(Chewing_static PROPERTIES
+    IMPORTED_LOCATION "${PREBUILDER_LIB_DIR}/libchewing.a"
+    INTERFACE_INCLUDE_DIRECTORIES "${PREBUILDER_INCLUDE_DIR}/chewing"
+)
+set(CHEWING_TARGET Chewing_static)
 add_subdirectory(fcitx5-chewing)
 endif()
 

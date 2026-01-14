@@ -45,6 +45,7 @@ js=(
   kyotocabinet
   leveldb
   libchewing
+  libcurl.js
   libgee
   libhangul
   libkkc

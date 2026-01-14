@@ -74,3 +74,13 @@ index 6dcf9bb..57ec6df 100644
      std::list<std::unique_ptr<TaskToken>> persistentTask_;
      std::list<std::unique_ptr<TaskToken>> tasks_;
  
+diff --git a/modules/cloudpinyin/fetch.cpp b/modules/cloudpinyin/fetch.cpp
+index 1d1de7f..52c2fd6 100644
+--- a/modules/cloudpinyin/fetch.cpp
++++ b/modules/cloudpinyin/fetch.cpp
+@@ -236,5 +236,4 @@ void FetchThread::run() {
+     // free events ahead of time
+     timer_.reset();
+     events_.clear();
+-    loop_.reset();
+ }

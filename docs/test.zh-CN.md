@@ -22,7 +22,7 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 
 ## chewing
 
-* 输入 `5j` 空格，预编辑为 `珠`。
+* 输入 `5j4up` 空格，预编辑为 `注音`。
 
 ## chinese-addons
 
@@ -130,3 +130,7 @@ tar -xjC ~/Library/fcitx5 -f chinese-addons-any.tar.bz2
 ## unikey
 
 * 输入 `aa`，预编辑为 `â`。
+
+## zhuyin
+
+* 输入 `5j4up` 空格，预编辑为 `註音`。

@@ -14,6 +14,49 @@ test('Pinyin', async ({ page }) => {
   await expectText(page, '龙')
 })
 
+test('Cloud Pinyin', async ({ page }) => {
+  const cloudCandidate = '灼眼的夏娜' // Must be something that is not in the whole candidate list.
+
+  // Intercept cloud pinyin request and mock response
+  await page.route('https://www.google.cn/inputtools/request?ime=pinyin&text=zhuo', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        'SUCCESS',
+        [
+          [
+            'zhuo',
+            [
+              cloudCandidate,
+            ],
+            [],
+            {
+              annotation: [
+                'zhuo',
+              ],
+              candidate_type: [
+                0,
+              ],
+              lc: [
+                '16',
+              ],
+            },
+          ],
+        ],
+      ]),
+    })
+  })
+  await init(page, 'chinese-addons', '拼音')
+
+  // Click "Yes" button in the cloud pinyin notification
+  await page.locator('.n-button').getByText('Yes').click()
+
+  await page.locator('textarea').click()
+  await page.keyboard.type('zhuo')
+  await expectCandidate(page, cloudCandidate, 1)
+})
+
 test('Predict', async ({ page }) => {
   await init(page, 'chinese-addons', '拼音')
 

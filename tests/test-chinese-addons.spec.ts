@@ -126,6 +126,17 @@ test('Full width', async ({ page }) => {
   await expectText(page, 'ａ')
 })
 
+test('Pin candidate', async ({ page }) => {
+  await init(page, 'chinese-addons', '拼音')
+
+  await page.keyboard.type('ding')
+  const second = page.locator('.fcitx-text').nth(1)
+  const text = await second.textContent()
+  await second.click({ button: 'right' })
+  await page.getByText('Pin to top as custom phrase').click()
+  await expectCandidate(page, text, 0)
+})
+
 test('Table', async ({ page }) => {
   await init(page, 'chinese-addons', '', 'wbx')
 

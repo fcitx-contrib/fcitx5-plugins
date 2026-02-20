@@ -1,0 +1,23 @@
+diff --git a/tools/libime_pinyindict.cpp b/tools/libime_pinyindict.cpp
+index e34c119..d554479 100644
+--- a/tools/libime_pinyindict.cpp
++++ b/tools/libime_pinyindict.cpp
+@@ -13,15 +13,16 @@
+ #include "libime/core/utils.h"
+ #include "libime/core/utils_p.h"
+ #include "libime/pinyin/pinyindictionary.h"
++#include <emscripten.h>
+ 
+-void usage(const char *argv0) {
++static void usage(const char *argv0) {
+     std::cout << "Usage: " << argv0 << " [-d] <source> <dest>\n"
+               << "-d: Dump binary to text\n"
+               << "-v: Show debug message\n"
+               << "-h: Show this help\n";
+ }
+ 
+-int main(int argc, char *argv[]) {
++extern "C" EMSCRIPTEN_KEEPALIVE int libime_pinyindict(int argc, char *argv[]) {
+ 
+     bool dump = false;
+     int c;

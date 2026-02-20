@@ -10,11 +10,24 @@ index 57f9c7c..a88ed26 100644
  
  if (ENABLE_GUI)
      add_subdirectory(gui)
+diff --git a/im/pinyin/pinyin-addon.conf.in.in b/im/pinyin/pinyin-addon.conf.in.in
+index e7c9f60..974d643 100644
+--- a/im/pinyin/pinyin-addon.conf.in.in
++++ b/im/pinyin/pinyin-addon.conf.in.in
+@@ -2,7 +2,7 @@
+ Name=Pinyin
+ Category=InputMethod
+ Version=@PROJECT_VERSION@
+-Library=libpinyin
++Library=export:libpinyin
+ Type=@FCITX_ADDON_TYPE@
+ OnDemand=True
+ Configurable=True
 diff --git a/im/pinyin/pinyin.cpp b/im/pinyin/pinyin.cpp
-index 6dd8f2e..2119ff4 100644
+index 73943c2..cc2c0b3 100644
 --- a/im/pinyin/pinyin.cpp
 +++ b/im/pinyin/pinyin.cpp
-@@ -688,8 +688,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
+@@ -700,8 +700,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
  
  PinyinEngine::PinyinEngine(Instance *instance)
      : instance_(instance),
@@ -24,7 +37,7 @@ index 6dd8f2e..2119ff4 100644
      ime_ = std::make_unique<libime::PinyinIME>(
          std::make_unique<libime::PinyinDictionary>(),
          std::make_unique<libime::UserLanguageModel>(
-@@ -847,25 +846,18 @@ void PinyinEngine::loadDict(const std::string &fullPath,
+@@ -859,25 +858,18 @@ void PinyinEngine::loadDict(const std::string &fullPath,
      }
      ime_->dict()->addEmptyDict();
      PINYIN_DEBUG() << "Loading pinyin dict " << fullPath;
@@ -75,10 +88,10 @@ index 6dcf9bb..57ec6df 100644
      std::list<std::unique_ptr<TaskToken>> tasks_;
  
 diff --git a/modules/cloudpinyin/fetch.cpp b/modules/cloudpinyin/fetch.cpp
-index 1d1de7f..52c2fd6 100644
+index 4c1dff3..7749de8 100644
 --- a/modules/cloudpinyin/fetch.cpp
 +++ b/modules/cloudpinyin/fetch.cpp
-@@ -236,5 +236,4 @@ void FetchThread::run() {
+@@ -247,5 +247,4 @@ void FetchThread::run() {
      // free events ahead of time
      timer_.reset();
      events_.clear();

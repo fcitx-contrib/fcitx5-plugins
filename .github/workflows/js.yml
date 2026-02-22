@@ -20,6 +20,18 @@ jobs:
         with:
           python-version: '3.14'
 
+      - name: Check prebuilder js-testing release and fcitx5-js testing release
+        if: ${{ github.ref != 'refs/heads/master' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api repos/fcitx-contrib/fcitx5-prebuilder/releases/tags/js-testing > /dev/null 2>&1; then
+            echo "PREBUILDER_TAG=js-testing" >> $GITHUB_ENV
+          fi
+          if gh api repos/fcitx-contrib/fcitx5-js/releases/tags/testing > /dev/null 2>&1; then
+            echo "JS_TAG=testing" >> $GITHUB_ENV
+          fi
+
       - name: Install dependencies
         run: |
           sudo apt install -y ninja-build \
@@ -30,7 +42,7 @@ jobs:
 
       - name: Install Fcitx5 dev package
         run: |
-          wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/latest/fcitx5-js-dev.tar.bz2
+          wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/${{ env.JS_TAG || 'latest' }}/fcitx5-js-dev.tar.bz2
           tar xjf fcitx5-js-dev.tar.bz2 -C build/js/usr
 
       - name: Get emscripten version
@@ -101,9 +113,19 @@ jobs:
           name: artifact-js
           path: build/js
 
+      - name: Check fcitx5-online testing release
+        if: ${{ github.ref != 'refs/heads/master' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api repos/fcitx/fcitx5-online/releases/tags/testing > /dev/null 2>&1; then
+            echo "ONLINE_TAG=testing" >> $GITHUB_ENV
+          fi
+
       - name: Install dependencies
         run: |
-          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/${{ env.ONLINE_TAG || 'latest' }}/fcitx5-online.zip
           curl -LO --output-dir tests/rime https://github.com/rime/librime-predict/releases/download/data-1.0/predict.db
           unzip cache/fcitx5-online.zip
           npm i -g pnpm

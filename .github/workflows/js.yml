@@ -113,9 +113,18 @@ jobs:
           name: artifact-js
           path: build/js
 
+      - name: Check fcitx5-online testing release
+        if: ${{ github.ref != 'refs/heads/master' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api repos/fcitx/fcitx5-online/releases/tags/testing > /dev/null 2>&1; then
+            echo "ONLINE_TAG=testing" >> $GITHUB_ENV
+          fi
+
       - name: Install dependencies
         run: |
-          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/latest/fcitx5-online.zip
+          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/${{ env.ONLINE_TAG || 'latest' }}/fcitx5-online.zip
           curl -LO --output-dir tests/rime https://github.com/rime/librime-predict/releases/download/data-1.0/predict.db
           unzip cache/fcitx5-online.zip
           npm i -g pnpm

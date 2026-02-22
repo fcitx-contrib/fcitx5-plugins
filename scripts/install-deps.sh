@@ -68,9 +68,11 @@ EXTRACT_DIR=build/$TARGET/usr
 CACHE_DIR=cache/$PLATFORM
 mkdir -p $EXTRACT_DIR $CACHE_DIR
 
+PREBUILDER_TAG=${PREBUILDER_TAG:-$PLATFORM}
+
 for dep in "${deps[@]}"; do
   file=$dep$POSTFIX.tar.bz2
-  [[ -f $CACHE_DIR/$file ]] || wget -P $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PLATFORM/$file
+  [[ -f $CACHE_DIR/$file ]] || wget -P $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PREBUILDER_TAG/$file
   tar xf $CACHE_DIR/$file -C $EXTRACT_DIR
 done
 

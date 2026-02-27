@@ -63,7 +63,7 @@ jobs:
           ./scripts/install.sh macos ${{ matrix.arch }}
 
       - name: Upload arch-specific artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: artifact-macos-${{ matrix.arch }}
           path: |
@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload arch-unspecific artifact
         if: ${{ matrix.arch == 'arm64' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: artifact-macos
           path: |
@@ -87,7 +87,7 @@ jobs:
           python scripts/generate-meta.py ${{ matrix.arch }}
 
       - name: Upload meta-${{ matrix.arch }}.json
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: artifact-macos-meta-${{ matrix.arch }}.json
           path: |
@@ -110,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: artifact-macos*
           merge-multiple: true

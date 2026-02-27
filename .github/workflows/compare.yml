@@ -17,7 +17,7 @@ jobs:
           sudo ln -sf /usr/bin/bsdtar /usr/bin/tar
 
       - name: Download artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: artifact-${{ inputs.platform }}
           merge-multiple: true

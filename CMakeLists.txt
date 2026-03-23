@@ -245,6 +245,7 @@ if (APPLE)
     set(SKK_DEFAULT_PATH "") # clear old variable as set by kkc
 endif()
 add_subdirectory(fcitx5-skk)
+target_link_libraries(skk "-L${PREBUILDER_LIB_DIR}" -lgee-0.8)
 if (EMSCRIPTEN)
     target_include_directories(skk PRIVATE
         "${PREBUILDER_INCLUDE_DIR}/gee-0.8"
@@ -252,7 +253,7 @@ if (EMSCRIPTEN)
         "${PREBUILDER_LIB_DIR}/glib-2.0/include"
         "${PREBUILDER_INCLUDE_DIR}"
     )
-    target_link_libraries(skk "-L${PREBUILDER_LIB_DIR}" -lffi -lpcre2-8 -lgobject-2.0 -lglib-2.0 -lgio-2.0 -lgmodule-2.0 -lgee-0.8 -ljson-glib-1.0 -lskk)
+    target_link_libraries(skk -lffi -lpcre2-8 -lgobject-2.0 -lglib-2.0 -lgio-2.0 -lgmodule-2.0 -ljson-glib-1.0 -lskk)
 endif()
 endif()
 

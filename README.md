@@ -1,7 +1,7 @@
 # Fcitx5 plugins
 
 Build plugins for
-[fcitx5-macos](https://github.com/fcitx-contrib/fcitx5-macos),
+[fcitx5-macos](https://github.com/fcitx/fcitx5-macos),
 [fcitx5-windows](https://github.com/fcitx-contrib/fcitx5-windows) and
 [fcitx5-js](https://github.com/fcitx-contrib/fcitx5-js).
 
@@ -11,11 +11,15 @@ Build plugins for
 * [chinese-addons](https://github.com/fcitx/fcitx5-chinese-addons): LGPL-2.1-or-later
 * [table-extra](https://github.com/fcitx/fcitx5-table-extra): GPL-3.0-or-later
 * [chewing](https://github.com/fcitx/fcitx5-chewing): LGPL-2.1-or-later
+* [jyutping](https://github.com/fcitx/libime-jyutping): LGPL-2.1-or-later
+* [zhuyin](https://github.com/fcitx/fcitx5-zhuyin): GPL-2.0-or-later
 
 ### Japanese
 * [mozc](https://github.com/fcitx/mozc): BSD-3-Clause
 * [skk](https://github.com/fcitx/fcitx5-skk): GPL-3.0-or-later
 * [anthy](https://github.com/fcitx/fcitx5-anthy): GPL-2.0-or-later
+* [kkc](https://github.com/fcitx/fcitx5-kkc): GPL-3.0-or-later
+* [cskk](https://github.com/fcitx/fcitx5-cskk): GPL-3.0-or-later
 
 ### Korean
 * [hangul](https://github.com/fcitx/fcitx5-hangul): GPL-2.0-or-later
@@ -39,7 +43,10 @@ Build plugins for
   * [librime-lua](https://github.com/hchunhui/librime-lua): BSD-3-Clause
   * [librime-octagram](https://github.com/lotem/librime-octagram): GPL-3.0-only
   * [librime-predict](https://github.com/rime/librime-predict): BSD-3-Clause
+  * [librime-qjs](https://github.com/HuangJian/librime-qjs): BSD-3-Clause
 * [m17n](https://github.com/fcitx/fcitx5-m17n): LGPL-2.1-or-later
+* [table-other](https://github.com/fcitx/fcitx5-table-other): GPL-3.0-only
+* [keyman](https://github.com/fcitx/fcitx5-keyman): GPL-2.0-or-later
 
 ### Other
 * [lua](https://github.com/fcitx/fcitx5-lua): LGPL-2.1-or-later

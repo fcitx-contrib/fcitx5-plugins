@@ -54,6 +54,7 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           git apply --directory=libime patches/libime.patch
+          git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-table-other patches/table-other.patch

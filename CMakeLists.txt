@@ -115,6 +115,7 @@ install(TARGETS kenlm EXPORT LibIMECoreTargets LIBRARY DESTINATION "${CMAKE_INST
 set(LIBIME_INSTALL_PKGDATADIR "../libime")
 add_subdirectory(fcitx5-chinese-addons)
 target_link_libraries(chttrans "${PREBUILDER_LIB_DIR}/libmarisa.a")
+target_sources(pinyin PRIVATE patches/customphrase_wrapper.cpp)
 if (EMSCRIPTEN)
     target_sources(pinyin PRIVATE libime/tools/libime_pinyindict.cpp)
     # Wherever exception is caught there must be explicit link option.

@@ -131,7 +131,7 @@ test('Pin candidate', async ({ page }) => {
 
   await page.keyboard.type('ding')
   const second = page.locator('.fcitx-text').nth(1)
-  const text = await second.textContent()
+  const text = (await second.textContent())!
   await second.click({ button: 'right' })
   await page.getByText('Pin to top as custom phrase').click()
   await expectCandidate(page, text, 0)

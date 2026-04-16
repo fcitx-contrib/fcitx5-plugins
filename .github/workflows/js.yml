@@ -42,8 +42,8 @@ jobs:
 
       - name: Install Fcitx5 dev package
         run: |
-          wget https://github.com/fcitx-contrib/fcitx5-js/releases/download/${{ env.JS_TAG || 'latest' }}/fcitx5-js-dev.tar.bz2
-          tar xjf fcitx5-js-dev.tar.bz2 -C build/js/usr
+          curl -fsSLO https://github.com/fcitx-contrib/fcitx5-js/releases/download/${{ env.JS_TAG || 'latest' }}/fcitx5-js-dev.tar.bz2
+          tar xf fcitx5-js-dev.tar.bz2 -C build/js/usr
 
       - name: Get emscripten version
         run: |
@@ -58,6 +58,7 @@ jobs:
       - name: Build
         run: |
           . emsdk/emsdk_env.sh
+          git apply --directory=fcitx5-mozc/mozc patches/mozc.patch
           git apply --directory=libime patches/libime.js.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.js.patch

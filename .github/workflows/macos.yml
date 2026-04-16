@@ -43,7 +43,7 @@ jobs:
             ref_name=${{ github.ref_name }}
             tag=${ref_name#macos-}
           fi
-          wget https://github.com/fcitx-contrib/fcitx5-macos/releases/download/$tag/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
+          curl -fsSLO https://github.com/fcitx-contrib/fcitx5-macos/releases/download/$tag/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
           sudo tar xf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
 
       - name: Build

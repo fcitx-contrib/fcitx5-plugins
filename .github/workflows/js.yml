@@ -11,11 +11,6 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/checkout@v6
-        with:
-          repository: emscripten-core/emsdk
-          path: emsdk
-
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
@@ -49,15 +44,13 @@ jobs:
         run: |
           echo "EMSCRIPTEN_VERSION=$(cat .emscripten-version)" >> $GITHUB_ENV
 
-      - name: Install emsdk
-        working-directory: emsdk
-        run: |
-          ./emsdk install ${{ env.EMSCRIPTEN_VERSION }}
-          ./emsdk activate ${{ env.EMSCRIPTEN_VERSION }}
+      - name: Setup emsdk
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: ${{ env.EMSCRIPTEN_VERSION }}
 
       - name: Build
         run: |
-          . emsdk/emsdk_env.sh
           git apply --directory=fcitx5-mozc/mozc patches/mozc.patch
           git apply --directory=libime patches/libime.js.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch

@@ -86,7 +86,7 @@ package() {
 
 cache_plugin() {
   local file=$1
-  [[ -f $ROOT/cache/$file ]] || curl -LO --output-dir $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
+  [[ -f $ROOT/cache/$file ]] || curl --retry 3 -fsSLO --output-dir $ROOT/cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/$file
 }
 
 for plugin in "${plugins[@]}"; do
@@ -141,7 +141,7 @@ skk_share_dir=$TARGET_DIR/skk/usr/share
 mkdir -p $skk_share_dir/skk
 cp -r $TARGET_DIR/usr/share/libskk $skk_share_dir
 skk_dict=SKK-JISYO.L.gz
-[[ -f $ROOT/cache/$skk_dict ]] || curl -LO --output-dir $ROOT/cache https://skk-dev.github.io/dict/$skk_dict
+[[ -f $ROOT/cache/$skk_dict ]] || curl --retry 3 -fsSLO --output-dir $ROOT/cache https://skk-dev.github.io/dict/$skk_dict
 gunzip -fc $ROOT/cache/$skk_dict > $skk_share_dir/skk/SKK-JISYO.L
 fi
 fi
@@ -149,7 +149,7 @@ fi
 # zhuyin
 if [[ $PLATFORM != "windows" ]]; then
   zhuyin_data=zhuyin-data.tar.bz2
-  [[ -f $ROOT/cache/$zhuyin_data ]] || curl -LO --output-dir $ROOT/cache https://github.com/fcitx-contrib/zhuyin-data/releases/download/latest/$zhuyin_data
+  [[ -f $ROOT/cache/$zhuyin_data ]] || curl --retry 3 -fsSLO --output-dir $ROOT/cache https://github.com/fcitx-contrib/zhuyin-data/releases/download/latest/$zhuyin_data
   tar xf $ROOT/cache/$zhuyin_data -C $TARGET_DIR/zhuyin/usr
 fi
 
@@ -194,7 +194,7 @@ fi
 # kkc
 if [[ $PLATFORM != "windows" ]]; then
   libkkc_data=libkkc-data.tar.bz2
-  [[ -f $ROOT/cache/$libkkc_data ]] || curl -LO --output-dir $ROOT/cache https://github.com/fcitx-contrib/libkkc-data/releases/download/latest/$libkkc_data
+  [[ -f $ROOT/cache/$libkkc_data ]] || curl --retry 3 -fsSLO --output-dir $ROOT/cache https://github.com/fcitx-contrib/libkkc-data/releases/download/latest/$libkkc_data
   # Model files are under lib/
   if [[ $PLATFORM == "macos" ]]; then
     tar xf $ROOT/cache/$libkkc_data -C $TARGET_DIR/kkc/data

@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Fcitx5 dev package
         run: |
-          curl -fsSLO https://github.com/fcitx-contrib/fcitx5-js/releases/download/${{ env.JS_TAG || 'latest' }}/fcitx5-js-dev.tar.bz2
+          curl --retry 3 -fsSLO https://github.com/fcitx-contrib/fcitx5-js/releases/download/${{ env.JS_TAG || 'latest' }}/fcitx5-js-dev.tar.bz2
           tar xf fcitx5-js-dev.tar.bz2 -C build/js/usr
 
       - name: Get emscripten version
@@ -120,8 +120,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          curl -LO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/${{ env.ONLINE_TAG || 'latest' }}/fcitx5-online.zip
-          curl -LO --output-dir tests/rime https://github.com/rime/librime-predict/releases/download/data-1.0/predict.db
+          curl --retry 3 -fsSLO --output-dir cache https://github.com/fcitx/fcitx5-online/releases/download/${{ env.ONLINE_TAG || 'latest' }}/fcitx5-online.zip
+          curl --retry 3 -fsSLO --output-dir tests/rime https://github.com/rime/librime-predict/releases/download/data-1.0/predict.db
           unzip cache/fcitx5-online.zip
           npm i -g pnpm
           pnpm i

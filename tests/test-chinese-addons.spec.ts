@@ -63,10 +63,10 @@ test('Predict', async ({ page }) => {
   await selectOption(page, 'Prediction Disabled')
   await page.keyboard.type('ke ')
   await expectText(page, '可')
-  await expectCandidate(page, '以')
+  await expectCandidate(page, '是')
 
   await page.keyboard.press('1')
-  await expectText(page, '可以')
+  await expectText(page, '可是')
 })
 
 test('Stroke filter', async ({ page }) => {

@@ -22,12 +22,12 @@ jobs:
             extra-cmake-modules \
             ninja
           ./scripts/install-deps.sh macos ${{ matrix.arch }}
-          curl -fsSLo cache/librime.tar.bz2 https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/debug/librime-${{ matrix.arch }}.tar.bz2
+          curl --retry 3 -fsSLo cache/librime.tar.bz2 https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/debug/librime-${{ matrix.arch }}.tar.bz2
           tar xf cache/librime.tar.bz2 -C build/macos-${{ matrix.arch }}/usr
 
       - name: Install Fcitx5 dev package
         run: |
-          curl -fsSLO https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
+          curl --retry 3 -fsSLO https://github.com/fcitx-contrib/fcitx5-macos/releases/download/latest/Fcitx5-${{ matrix.arch }}-dev.tar.bz2
           sudo tar xf Fcitx5-${{ matrix.arch }}-dev.tar.bz2 -C "/Library/Input Methods"
 
       - name: Build
@@ -37,7 +37,7 @@ jobs:
             -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }} \
             -DANTHY=OFF -DBAMBOO=OFF -DCHEWING=OFF -DCHINESE_ADDONS=OFF -DCSKK=OFF -DHALLELUJAH=OFF -DHANGUL=OFF -DJYUTPING=OFF -DKEYMAN=OFF -DKKC=OFF -DM17N=OFF -DMOZC=OFF -DSAYURA=OFF -DSKK=OFF -DTABLE_EXTRA=OFF -DTHAI=OFF -DUNIKEY=OFF -DZHUYIN=OFF
           cmake --build build/macos-${{ matrix.arch }} --target rime
-          curl -fsSLO --output-dir cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/rime-${{ matrix.arch }}.tar.bz2
+          curl --retry 3 -fsSLO --output-dir cache https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/macos-latest/rime-${{ matrix.arch }}.tar.bz2
           mkdir build/rime
           tar xf cache/rime-${{ matrix.arch }}.tar.bz2 -C build/rime
           mv build/macos-${{ matrix.arch }}/bin/librime.so build/rime/lib/fcitx5

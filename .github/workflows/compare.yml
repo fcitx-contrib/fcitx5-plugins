@@ -38,7 +38,7 @@ jobs:
           while read file; do
             tar xf $file plugin
             cat plugin/*.json | jq > plugin/json
-            if curl -fsSLO --output-dir release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/$tag/$file; then
+            if curl --retry 3 -fsSLO --output-dir release https://github.com/fcitx-contrib/fcitx5-plugins/releases/download/$tag/$file; then
               echo "## $file" >> summary.md
               tar xf release/$file -C release plugin
               cat release/plugin/*.json | jq > release/plugin/json

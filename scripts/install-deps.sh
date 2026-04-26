@@ -72,13 +72,13 @@ PREBUILDER_TAG=${PREBUILDER_TAG:-$PLATFORM}
 
 for dep in "${deps[@]}"; do
   file=$dep$POSTFIX.tar.bz2
-  [[ -f $CACHE_DIR/$file ]] || curl -fsSLO --output-dir $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PREBUILDER_TAG/$file
+  [[ -f $CACHE_DIR/$file ]] || curl --retry 3 -fsSLO --output-dir $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PREBUILDER_TAG/$file
   tar xf $CACHE_DIR/$file -C $EXTRACT_DIR
 done
 
 # Platform-unspecific packages
 file=m17n-db.tar.bz2
-[[ -f cache/$file ]] || curl -fsSLO --output-dir cache https://github.com/fcitx-contrib/m17n-cmake/releases/download/latest/$file
+[[ -f cache/$file ]] || curl --retry 3 -fsSLO --output-dir cache https://github.com/fcitx-contrib/m17n-cmake/releases/download/latest/$file
 ln -sf ../$file $CACHE_DIR/m17n-db$POSTFIX.tar.bz2
 
 if [[ $PLATFORM == "macos" ]]; then

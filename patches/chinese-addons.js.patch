@@ -1,20 +1,8 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 95d2b51..35815bc 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -72,7 +72,6 @@ fcitx5_add_i18n_definition()
- add_subdirectory(modules)
- add_subdirectory(im)
- add_subdirectory(po)
--add_subdirectory(tools)
- 
- if (ENABLE_GUI)
-     add_subdirectory(gui)
 diff --git a/im/pinyin/pinyin.cpp b/im/pinyin/pinyin.cpp
-index 73943c2..cc2c0b3 100644
+index 0592124..eab9f20 100644
 --- a/im/pinyin/pinyin.cpp
 +++ b/im/pinyin/pinyin.cpp
-@@ -700,8 +700,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
+@@ -710,8 +710,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
  
  PinyinEngine::PinyinEngine(Instance *instance)
      : instance_(instance),
@@ -24,29 +12,19 @@ index 73943c2..cc2c0b3 100644
      ime_ = std::make_unique<libime::PinyinIME>(
          std::make_unique<libime::PinyinDictionary>(),
          std::make_unique<libime::UserLanguageModel>(
-@@ -859,25 +858,18 @@ void PinyinEngine::loadDict(const std::string &fullPath,
+@@ -869,6 +868,7 @@ void PinyinEngine::loadDict(const std::string &fullPath,
      }
      ime_->dict()->addEmptyDict();
      PINYIN_DEBUG() << "Loading pinyin dict " << fullPath;
--    std::packaged_task<libime::PinyinDictionary::TrieType()> task([fullPath]() {
--        std::ifstream in(fullPath, std::ios::in | std::ios::binary);
--        auto trie = libime::PinyinDictionary::load(
--            in, libime::PinyinDictFormat::Binary);
--        return trie;
--    });
--    taskTokens.push_back(worker_.addTask(
--        std::move(task),
--        [this, index = ime_->dict()->dictSize() - 1, fullPath](
--            std::shared_future<libime::PinyinDictionary::TrieType> &future) {
--            try {
--                PINYIN_DEBUG()
--                    << "Load pinyin dict " << fullPath << " finished.";
--                ime_->dict()->setTrie(index, future.get());
--            } catch (const std::exception &e) {
--                PINYIN_ERROR() << "Failed to load pinyin dict " << fullPath
--                               << ": " << e.what();
--            }
--        }));
++#if 0
+     std::packaged_task<libime::PinyinDictionary::TrieType()> task([fullPath]() {
+         std::ifstream in(fullPath, std::ios::in | std::ios::binary);
+         auto trie = libime::PinyinDictionary::load(
+@@ -888,6 +888,19 @@ void PinyinEngine::loadDict(const std::string &fullPath,
+                                << ": " << e.what();
+             }
+         }));
++#endif
 +    std::ifstream in(fullPath, std::ios::in | std::ios::binary);
 +    auto trie = libime::PinyinDictionary::load(
 +        in, libime::PinyinDictFormat::Binary);
@@ -63,10 +41,10 @@ index 73943c2..cc2c0b3 100644
  
  void PinyinEngine::loadBuiltInDict() {
 diff --git a/im/pinyin/pinyin.h b/im/pinyin/pinyin.h
-index 6dcf9bb..57ec6df 100644
+index a190794..750ab80 100644
 --- a/im/pinyin/pinyin.h
 +++ b/im/pinyin/pinyin.h
-@@ -498,7 +498,6 @@ private:
+@@ -516,7 +516,6 @@ private:
      std::unique_ptr<HandlerTableEntry<EventHandler>> event_;
      CustomPhraseDict customPhrase_;
      SymbolDict symbols_;

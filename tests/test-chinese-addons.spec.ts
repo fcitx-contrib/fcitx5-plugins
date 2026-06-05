@@ -117,7 +117,7 @@ test('Punctuation with surrounding text', async ({ page }) => {
 
   await page.keyboard.insertText('1\n2')
   await page.locator('textarea').click({ position: { x: 30, y: 15 }})
-  await page.waitForTimeout(5)
+  await page.waitForTimeout(20)
   await page.keyboard.press('.')
   await expectText(page, '1.\n2')
 })

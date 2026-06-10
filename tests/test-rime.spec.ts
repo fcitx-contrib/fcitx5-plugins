@@ -22,7 +22,7 @@ test('Rime', async ({ page }) => {
   await page.keyboard.type('fanti')
   await expectCandidate(page, '繁體')
   await page.keyboard.press('Escape')
-  await selectOption(page, '漢字 → 汉字')
+  await selectOption(page, '傳統漢字', '简化字')
   await page.keyboard.type('fanti')
   await expectCandidate(page, '繁体')
   await page.keyboard.press('Escape')

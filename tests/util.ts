@@ -38,9 +38,12 @@ export async function init(page: Page, plugin: string | string[], im?: string, k
   }
 }
 
-export async function selectOption(page: Page, option: string) {
+export async function selectOption(page: Page, option: string, subOption?: string) {
   await page.locator('.my-column > :first-child > * > :nth-child(3)').click()
   await page.locator('.n-dropdown-option').getByText(option).click()
+  if (subOption) {
+    await page.locator('.n-dropdown-option').getByText(subOption).click()
+  }
 }
 
 export function expectCandidate(page: Page, text: string, nth = 0) {

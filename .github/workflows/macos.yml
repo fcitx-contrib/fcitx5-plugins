@@ -94,6 +94,17 @@ jobs:
           path: |
             meta-${{ matrix.arch }}.json
 
+      - name: Create slim language model for iOS
+        if: ${{ matrix.arch == 'arm64' }}
+        run: ./scripts/create-slim-language-model.sh
+
+      - name: Upload chinese-addons-slim
+        if: ${{ matrix.arch == 'arm64' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifact-macos-slim
+          path: build/macos-arm64/chinese-addons-slim.tar.bz2
+
       - name: Setup tmate session
         if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3

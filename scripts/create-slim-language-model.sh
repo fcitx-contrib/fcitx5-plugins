@@ -27,4 +27,4 @@ elif [[ "$size" -lt "$lower" ]]; then
 fi
 
 cd $data
-tar cjf ../../chinese-addons-slim-any.tar.bz2 --no-xattrs *
+tar cjf ../../chinese-addons-slim.tar.bz2 --no-xattrs *

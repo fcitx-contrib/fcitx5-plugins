@@ -63,6 +63,10 @@ jobs:
           cmake --build build/macos-${{ matrix.arch }}
           ./scripts/install.sh macos ${{ matrix.arch }}
 
+      - name: Create slim language model for iOS
+        if: ${{ matrix.arch == 'arm64' }}
+        run: ./scripts/create-slim-language-model.sh
+
       - name: Upload arch-specific artifact
         uses: actions/upload-artifact@v7
         with:

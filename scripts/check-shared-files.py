@@ -14,4 +14,4 @@ for file in sys.argv[1:]:
             else:
                 file_set.add(file)
 
-exit(1 if has_shared else 0)
+sys.exit(1 if has_shared else 0)

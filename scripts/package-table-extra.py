@@ -1,4 +1,5 @@
 import os
+import sys
 
 extra_plugins = {
     "array": [
@@ -69,7 +70,7 @@ other_plugins = {
 
 def ensure(command: str):
     if os.system(command) != 0:
-        exit(1)
+        sys.exit(1)
 
 
 build_dir = os.getcwd()

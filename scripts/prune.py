@@ -87,7 +87,7 @@ def process(input_file, output_file, threshold2, threshold3):
                 kept3 += 1
                 out.append(line)
 
-        except Exception:
+        except (ValueError, IndexError):
             out.append(line)
 
     # Update header

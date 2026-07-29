@@ -23,7 +23,7 @@ files.sort()
 
 try:
     version = dirhash(cwd, "md5", ignore=["plugin"])
-except OSError:
+except ValueError:
     # pure data plugin
     version = None
 

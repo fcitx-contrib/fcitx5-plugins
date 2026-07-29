@@ -2,6 +2,7 @@ import json
 import os
 import sys
 from typing import Any
+
 from dirhash import dirhash
 
 input_methods = sys.argv[1:]
@@ -22,11 +23,11 @@ files.sort()
 
 try:
     version = dirhash(cwd, "md5", ignore=["plugin"])
-except Exception:
+except ValueError:
     # pure data plugin
     version = None
 
-if target.startswith('macos') or target.startswith('windows'):
+if target.startswith(('macos', 'windows')):
     data_version = dirhash(data_dir, "md5")
 else:
     data_version = None

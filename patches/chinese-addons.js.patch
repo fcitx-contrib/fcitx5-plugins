@@ -1,8 +1,8 @@
 diff --git a/im/pinyin/pinyin.cpp b/im/pinyin/pinyin.cpp
-index 0592124..eab9f20 100644
+index 513a8d4..343870a 100644
 --- a/im/pinyin/pinyin.cpp
 +++ b/im/pinyin/pinyin.cpp
-@@ -710,8 +710,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
+@@ -754,8 +754,7 @@ std::string PinyinEngine::evaluateCustomPhrase(InputContext *inputContext,
  
  PinyinEngine::PinyinEngine(Instance *instance)
      : instance_(instance),
@@ -12,7 +12,7 @@ index 0592124..eab9f20 100644
      ime_ = std::make_unique<libime::PinyinIME>(
          std::make_unique<libime::PinyinDictionary>(),
          std::make_unique<libime::UserLanguageModel>(
-@@ -869,6 +868,7 @@ void PinyinEngine::loadDict(const std::string &fullPath,
+@@ -913,6 +912,7 @@ void PinyinEngine::loadDict(const std::string &fullPath,
      }
      ime_->dict()->addEmptyDict();
      PINYIN_DEBUG() << "Loading pinyin dict " << fullPath;
@@ -20,7 +20,7 @@ index 0592124..eab9f20 100644
      std::packaged_task<libime::PinyinDictionary::TrieType()> task([fullPath]() {
          std::ifstream in(fullPath, std::ios::in | std::ios::binary);
          auto trie = libime::PinyinDictionary::load(
-@@ -888,6 +888,19 @@ void PinyinEngine::loadDict(const std::string &fullPath,
+@@ -932,6 +932,19 @@ void PinyinEngine::loadDict(const std::string &fullPath,
                                 << ": " << e.what();
              }
          }));
@@ -41,10 +41,10 @@ index 0592124..eab9f20 100644
  
  void PinyinEngine::loadBuiltInDict() {
 diff --git a/im/pinyin/pinyin.h b/im/pinyin/pinyin.h
-index a190794..750ab80 100644
+index 5ace603..0ee8798 100644
 --- a/im/pinyin/pinyin.h
 +++ b/im/pinyin/pinyin.h
-@@ -516,7 +516,6 @@ private:
+@@ -518,7 +518,6 @@ private:
      std::unique_ptr<HandlerTableEntry<EventHandler>> event_;
      CustomPhraseDict customPhrase_;
      SymbolDict symbols_;
@@ -53,12 +53,25 @@ index a190794..750ab80 100644
      std::list<std::unique_ptr<TaskToken>> tasks_;
  
 diff --git a/modules/cloudpinyin/fetch.cpp b/modules/cloudpinyin/fetch.cpp
-index 4c1dff3..7749de8 100644
+index a634736..af5c246 100644
 --- a/modules/cloudpinyin/fetch.cpp
 +++ b/modules/cloudpinyin/fetch.cpp
-@@ -247,5 +247,4 @@ void FetchThread::run() {
+@@ -245,5 +245,4 @@ void FetchThread::run() {
      // free events ahead of time
      timer_.reset();
      events_.clear();
 -    loop_.reset();
  }
+diff --git a/tools/scel2org5.cpp b/tools/scel2org5.cpp
+index 2bcdba7..bf9e5a7 100644
+--- a/tools/scel2org5.cpp
++++ b/tools/scel2org5.cpp
+@@ -497,7 +497,7 @@ void readDelTable(std::istream &in, const ScelOption &options) {
+ 
+ } // namespace
+ 
+-int main(int argc, char **argv) {
++extern "C" __attribute__((used)) int scel2org5(int argc, char *argv[]) {
+     int c;
+     std::optional<std::string_view> outputFile;
+     bool printDel = false;

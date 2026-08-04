@@ -121,7 +121,10 @@ add_subdirectory(fcitx5-chinese-addons)
 target_link_libraries(chttrans "${PREBUILDER_LIB_DIR}/libmarisa.a")
 target_sources(pinyin PRIVATE patches/customphrase_wrapper.cpp)
 if (EMSCRIPTEN)
-    target_sources(pinyin PRIVATE libime/tools/libime_pinyindict.cpp)
+    target_sources(pinyin PRIVATE
+        libime/tools/libime_pinyindict.cpp
+        fcitx5-chinese-addons/tools/scel2org5.cpp
+    )
     # Wherever exception is caught there must be explicit link option.
     target_link_libraries(pinyin -fwasm-exceptions)
     target_link_libraries(table -fwasm-exceptions)

@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "rebaseWhen": "conflicted",
   "git-submodules": {
     "enabled": true
   }

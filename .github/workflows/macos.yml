@@ -95,11 +95,11 @@ jobs:
             meta-${{ matrix.arch }}.json
 
       - name: Create slim language model for iOS
-        if: ${{ matrix.arch == 'arm64' }}
+        if: ${{ matrix.arch == 'arm64' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/master') }}
         run: ./scripts/create-slim-language-model.sh
 
       - name: Upload chinese-addons-slim
-        if: ${{ matrix.arch == 'arm64' }}
+        if: ${{ matrix.arch == 'arm64' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/master') }}
         uses: actions/upload-artifact@v7
         with:
           name: artifact-macos-slim

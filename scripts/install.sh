@@ -33,6 +33,7 @@ windows=(
 
 js=(
   anthy
+  bamboo
   chewing
   chinese-addons
   cskk
@@ -91,6 +92,9 @@ cache_plugin() {
 
 for plugin in "${plugins[@]}"; do
   DESTDIR=$TARGET_DIR/$plugin cmake --install build/$TARGET/fcitx5-$plugin
+  if [[ $PLATFORM == "js" && $plugin == "bamboo" ]]; then
+    cp build/$TARGET/fcitx5-bamboo/bamboo/bamboo-core.wasm $TARGET_DIR/$plugin/usr/lib/fcitx5
+  fi
   rm -rf $TARGET_DIR/$plugin/usr/include
   rm -rf $TARGET_DIR/$plugin/usr/lib/cmake
   rm -rf $TARGET_DIR/$plugin/usr/share/metainfo # only useful for linux
@@ -205,6 +209,7 @@ fi
 
 if [[ $PLATFORM != "windows" ]]; then
 package anthy anthy
+package bamboo bamboo
 package chewing chewing
 package chinese-addons pinyin
 package cskk cskk

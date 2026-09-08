@@ -15,6 +15,10 @@ jobs:
         with:
           python-version: '3.14'
 
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: '.go-version'
+
       - name: Check prebuilder js-testing release and fcitx5-js testing release
         if: ${{ github.ref != 'refs/heads/master' }}
         env:
@@ -52,6 +56,7 @@ jobs:
       - name: Build
         run: |
           git apply --directory=fcitx5-mozc/mozc patches/mozc.patch
+          git apply --directory=fcitx5-bamboo patches/bamboo.js.patch
           git apply --directory=libime patches/libime.js.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.js.patch

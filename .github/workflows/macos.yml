@@ -22,15 +22,17 @@ jobs:
         with:
           python-version: '3.14'
 
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: '.go-version'
+
       - name: Install dependencies
         env:
           HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
         run: |
-          brew update # always use latest go as github actions image may be inconsistent between runs.
           brew install \
             extra-cmake-modules \
-            ninja \
-            go
+            ninja
           ./scripts/install-deps.sh macos ${{ matrix.arch }}
           sudo tar xf cache/macos/marisa-${{ matrix.arch }}.tar.bz2 -C /usr/local bin/marisa-build # Make use of Rosetta
           pip install dirhash

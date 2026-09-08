@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0c4677b..0ade2eb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,9 @@ add_definitions(-DFCITX_GETTEXT_DOMAIN=\"fcitx5-bamboo\")
+ fcitx5_add_i18n_definition()
+ 
+ add_subdirectory(po)
++if (NOT EMSCRIPTEN)
+ add_subdirectory(bamboo)
++endif()
+ add_subdirectory(src)
+ add_subdirectory(data)
+ 
+diff --git a/src/bamboo.cpp b/src/bamboo.cpp
+index d36572c..db0d7d5 100644
+--- a/src/bamboo.cpp
++++ b/src/bamboo.cpp
+@@ -6,6 +6,9 @@
+  */
+ 
+ #include "bamboo.h"
++#ifdef __EMSCRIPTEN__
++#include <bambooapi.cpp>
++#endif
+ #include "bambooconfig.h"
+ #include <algorithm>
+ #include <cstdint>

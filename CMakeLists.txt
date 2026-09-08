@@ -90,8 +90,36 @@ endif()
 
 # bamboo
 if (BAMBOO)
-if (NOT EMSCRIPTEN) # https://github.com/golang/go/issues/55351
+if (EMSCRIPTEN)
+    set(BAMBOO_GO_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fcitx5-bamboo/bamboo")
+    set(BAMBOO_GO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/fcitx5-bamboo/bamboo")
+    set(BAMBOO_GO_WASM_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/patches/bamboo-wasm.go")
+    set(BAMBOO_GO_OVERLAY "${BAMBOO_GO_BINARY_DIR}/wasm-overlay.json")
+    file(GENERATE OUTPUT "${BAMBOO_GO_OVERLAY}"
+        CONTENT "{\"Replace\":{\"${BAMBOO_GO_SOURCE_DIR}/bamboo-wasm.go\":\"${BAMBOO_GO_WASM_SOURCE}\"}}\n")
+    file(GLOB BAMBOO_GO_SRCS
+        "${BAMBOO_GO_SOURCE_DIR}/*.go"
+        "${BAMBOO_GO_SOURCE_DIR}/bamboo-core/*.go"
+    )
+    add_custom_command(OUTPUT "${BAMBOO_GO_BINARY_DIR}/bamboo-core.wasm"
+        DEPENDS ${BAMBOO_GO_SRCS} "${BAMBOO_GO_SOURCE_DIR}/go.mod" "${BAMBOO_GO_WASM_SOURCE}"
+        WORKING_DIRECTORY "${BAMBOO_GO_SOURCE_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E env
+                    GOOS=wasip1 GOARCH=wasm CGO_ENABLED=0
+                    GOCACHE=${BAMBOO_GO_BINARY_DIR}/go-cache
+                    go build -overlay="${BAMBOO_GO_OVERLAY}"
+                    -buildmode=c-shared -trimpath
+                    -ldflags=-s\ -w
+                    -o "${BAMBOO_GO_BINARY_DIR}/bamboo-core.wasm"
+                    .)
+    add_custom_target(bamboo-core ALL
+        DEPENDS "${BAMBOO_GO_BINARY_DIR}/bamboo-core.wasm")
+    add_library(Bamboo::Core INTERFACE IMPORTED GLOBAL)
+    add_dependencies(Bamboo::Core bamboo-core)
+endif()
 add_subdirectory(fcitx5-bamboo)
+if (EMSCRIPTEN)
+    target_include_directories(bamboo PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/patches")
 endif()
 endif()
 

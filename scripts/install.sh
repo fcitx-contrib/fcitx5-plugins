@@ -230,8 +230,6 @@ package thai libthai
 package unikey unikey
 
 if [[ $PLATFORM == "macos" ]]; then
-  package bamboo bamboo
-
   # table-extra
   pushd $TARGET_DIR > /dev/null
   python $ROOT/scripts/package-table-extra.py

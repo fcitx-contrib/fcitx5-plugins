@@ -1,0 +1,5 @@
+patch:
+  ascii_composer:
+    good_old_caps_lock: false
+    switch_key:
+      Caps_Lock: commit_code

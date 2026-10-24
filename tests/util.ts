@@ -11,7 +11,9 @@ export async function init(page: Page, plugin: string | string[], im?: string, k
   }
 
   // Install plugin.
-  const plugins = Array.isArray(plugin) ? plugin : [plugin]
+  const plugins = Array.isArray(plugin)
+    ? plugin
+    : [plugin]
   if (plugins.length > 0) {
     await page.locator('.my-column > :first-child > * > :nth-child(6)').click()
     const [fileChooser] = await Promise.all([

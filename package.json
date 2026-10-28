@@ -13,7 +13,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^10.0.0",
     "@playwright/test": "^1.59.0",
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.0.0",
     "eslint": "^10.1.0",
     "serve": "^14.2.6",
     "typescript": "^6.0.2"

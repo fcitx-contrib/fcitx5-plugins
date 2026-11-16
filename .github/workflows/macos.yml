@@ -34,6 +34,7 @@ jobs:
             extra-cmake-modules \
             ninja
           ./scripts/install-deps.sh macos ${{ matrix.arch }}
+          ./scripts/install-mcbopomofo-deps.sh ${{ matrix.arch }}
           sudo tar xf cache/macos/marisa-${{ matrix.arch }}.tar.bz2 -C /usr/local bin/marisa-build # Make use of Rosetta
           pip install dirhash
 
@@ -58,6 +59,7 @@ jobs:
           git apply --directory=libime patches/libime.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
+          git apply --directory=fcitx5-mcbopomofo patches/mcbopomofo.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-table-other patches/table-other.patch
           git apply --directory=fcitx5-zhuyin patches/zhuyin.patch

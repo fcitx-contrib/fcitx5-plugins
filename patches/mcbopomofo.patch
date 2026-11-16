@@ -1,0 +1,175 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e91934..9b0a173 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,7 +79,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-bpmfvs-variants.txt" DESTI
+ 
+ fcitx5_translate_desktop_file(org.fcitx.Fcitx5.Addon.McBopomofo.metainfo.xml.in
+                               org.fcitx.Fcitx5.Addon.McBopomofo.metainfo.xml XML
+-                              PO_DIRECTORY "${CMAKE_SOURCE_DIR}/po")
++                              PO_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/po")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/org.fcitx.Fcitx5.Addon.McBopomofo.metainfo.xml" DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6314c75..1611e1a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -59,8 +59,8 @@ include("${FCITX_INSTALL_CMAKECONFIG_DIR}/Fcitx5Utils/Fcitx5CompilerSettings.cma
+ 
+ add_library(McBopomofoLib ${MCBOPOMOFO_LIB_SOURCES})
+ target_compile_options(McBopomofoLib PRIVATE -Wno-unknown-pragmas)
+-target_link_libraries(McBopomofoLib PRIVATE Fcitx5::Utils ICU::uc ICU::i18n ${JSONC_LIBRARIES} gramambular2_lib McBopomofoLMLib MandarinLib ChineseNumbersLib RomanNumbersLib Big5UtilsLib BopomofoBraille)
+-target_include_directories(McBopomofoLib PRIVATE Fcitx5::Utils)
++target_link_libraries(McBopomofoLib PRIVATE Fcitx5::Utils ICU::uc ICU::i18n PkgConfig::JSONC fmt::fmt gramambular2_lib McBopomofoLMLib MandarinLib ChineseNumbersLib RomanNumbersLib Big5UtilsLib BopomofoBraille)
++target_include_directories(McBopomofoLib PRIVATE Fcitx5::Utils fmt::fmt)
+ target_compile_definitions(McBopomofoLib PRIVATE FCITX_GETTEXT_DOMAIN=\"fcitx5-mcbopomofo\")
+ 
+ if (ENABLE_CLANG_TIDY)
+@@ -76,7 +76,7 @@ include_directories(Big5Utils)
+ 
+ add_library(mcbopomofo MODULE McBopomofo.cpp)
+ target_compile_options(mcbopomofo PRIVATE -Wno-unknown-pragmas)
+-target_link_libraries(mcbopomofo PRIVATE Fcitx5::Core Fcitx5::Module::Notifications McBopomofoLib fmt::fmt ${JSONC_LIBRARIES})
++target_link_libraries(mcbopomofo PRIVATE Fcitx5::Core Fcitx5::Module::Notifications McBopomofoLib fmt::fmt PkgConfig::JSONC)
+ target_include_directories(mcbopomofo PRIVATE Fcitx5::Core Fcitx5::Module::Notifications fmt::fmt)
+ set_target_properties(mcbopomofo PROPERTIES PREFIX "")
+ target_compile_definitions(mcbopomofo PRIVATE FCITX_GETTEXT_DOMAIN=\"fcitx5-mcbopomofo\")
+@@ -89,15 +89,15 @@ endif ()
+ # Addon config file
+ # We need additional layer of conversion because we want PROJECT_VERSION in it.
+ configure_file(mcbopomofo-addon.conf.in.in mcbopomofo-addon.conf.in)
+-fcitx5_translate_desktop_file("${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-addon.conf.in" mcbopomofo-addon.conf PO_DIRECTORY "${CMAKE_SOURCE_DIR}/po")
++fcitx5_translate_desktop_file("${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-addon.conf.in" mcbopomofo-addon.conf PO_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../po")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-addon.conf" RENAME mcbopomofo.conf DESTINATION "${FCITX_INSTALL_PKGDATADIR}/addon")
+ 
+ # Input Method registration file
+ configure_file(mcbopomofo.conf.in.in mcbopomofo.conf.in)
+-fcitx5_translate_desktop_file("${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo.conf.in" mcbopomofo.conf PO_DIRECTORY "${CMAKE_SOURCE_DIR}/po")
++fcitx5_translate_desktop_file("${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo.conf.in" mcbopomofo.conf PO_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../po")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo.conf" DESTINATION "${FCITX_INSTALL_PKGDATADIR}/inputmethod")
+ configure_file(mcbopomofo-plain.conf.in.in mcbopomofo-plain.conf.in)
+-fcitx5_translate_desktop_file("${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-plain.conf.in" mcbopomofo-plain.conf PO_DIRECTORY "${CMAKE_SOURCE_DIR}/po")
++fcitx5_translate_desktop_file("${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-plain.conf.in" mcbopomofo-plain.conf PO_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../po")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mcbopomofo-plain.conf" DESTINATION "${FCITX_INSTALL_PKGDATADIR}/inputmethod")
+ 
+ if (ENABLE_TEST)
+diff --git a/src/McBopomofo.cpp b/src/McBopomofo.cpp
+index 32c69e6..e8bc505 100644
+--- a/src/McBopomofo.cpp
++++ b/src/McBopomofo.cpp
+@@ -1576,38 +1576,47 @@ void McBopomofoEngine::handleEmptyState(fcitx::InputContext* context,
+                                         InputState* prev,
+                                         InputStates::Empty* /*unused*/) {
+   context->inputPanel().reset();
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+   if (auto* notEmpty = dynamic_cast<InputStates::NotEmpty*>(prev)) {
+     context->commitString(notEmpty->composingBuffer);
+   }
++  context->inputPanel().setClientPreedit(fcitx::Text{});
++  context->inputPanel().setPreedit(fcitx::Text{});
++  context->inputPanel().setAuxDown(fcitx::Text{});
+   context->updatePreedit();
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ void McBopomofoEngine::handleEmptyIgnoringPreviousState(
+     fcitx::InputContext* context, InputState* /*unused*/,
+     InputStates::EmptyIgnoringPrevious* /*unused*/) {
+   context->inputPanel().reset();
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
++  context->inputPanel().setClientPreedit(fcitx::Text{});
++  context->inputPanel().setPreedit(fcitx::Text{});
++  context->inputPanel().setAuxDown(fcitx::Text{});
+   context->updatePreedit();
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ void McBopomofoEngine::handleCommittingState(fcitx::InputContext* context,
+                                              InputState* /*prev*/,
+                                              InputStates::Committing* current) {
+   context->inputPanel().reset();
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+   if (!current->text.empty()) {
+     context->commitString(current->text);
+   }
++  context->inputPanel().setClientPreedit(fcitx::Text{});
++  context->inputPanel().setPreedit(fcitx::Text{});
++  context->inputPanel().setAuxDown(fcitx::Text{});
+   context->updatePreedit();
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ void McBopomofoEngine::handleInputtingState(fcitx::InputContext* context,
+                                             InputState* /*unused*/,
+                                             InputStates::Inputting* current) {
+   context->inputPanel().reset();
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+   updatePreedit(context, current);
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ void McBopomofoEngine::handleCandidatesState(fcitx::InputContext* context,
+@@ -1830,26 +1839,25 @@ void McBopomofoEngine::handleCandidatesState(fcitx::InputContext* context,
+   candidateList->toCursorMovable()->nextCandidate();
+   context->inputPanel().reset();
+   context->inputPanel().setCandidateList(std::move(candidateList));
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ 
+   auto* notEmpty = dynamic_cast<InputStates::NotEmpty*>(current);
+   if (notEmpty != nullptr) {
+     updatePreedit(context, notEmpty);
+   }
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ void McBopomofoEngine::handleMarkingState(fcitx::InputContext* context,
+                                           InputState* /*unused*/,
+                                           InputStates::Marking* current) {
+   context->inputPanel().reset();
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+   updatePreedit(context, current);
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ void McBopomofoEngine::handleStateWithCustomInput(fcitx::InputContext* context,
+                                                   std::string composingBuffer) {
+   context->inputPanel().reset();
+-  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ 
+   bool useClientPreedit =
+       context->capabilityFlags().test(fcitx::CapabilityFlag::Preedit);
+@@ -1862,10 +1870,14 @@ void McBopomofoEngine::handleStateWithCustomInput(fcitx::InputContext* context,
+ 
+   if (useClientPreedit) {
+     context->inputPanel().setClientPreedit(preedit);
++    context->inputPanel().setPreedit(fcitx::Text{});
+   } else {
++    context->inputPanel().setClientPreedit(fcitx::Text{});
+     context->inputPanel().setPreedit(preedit);
+   }
++  context->inputPanel().setAuxDown(fcitx::Text{});
+   context->updatePreedit();
++  context->updateUserInterface(fcitx::UserInterfaceComponent::InputPanel);
+ }
+ 
+ fcitx::CandidateLayoutHint McBopomofoEngine::getCandidateLayoutHint() const {
+@@ -1932,11 +1944,17 @@ void McBopomofoEngine::updatePreedit(fcitx::InputContext* context,
+ 
+   if (useClientPreedit) {
+     context->inputPanel().setClientPreedit(preedit);
++    context->inputPanel().setPreedit(fcitx::Text{});
+   } else {
++    context->inputPanel().setClientPreedit(fcitx::Text{});
+     context->inputPanel().setPreedit(preedit);
+   }
+ 
+-  context->inputPanel().setAuxDown(fcitx::Text(state->tooltip));
++  if (!state->tooltip.empty()) {
++    context->inputPanel().setAuxDown(fcitx::Text(state->tooltip));
++  } else {
++    context->inputPanel().setAuxDown(fcitx::Text{});
++  }
+   context->updatePreedit();
+ }
+ 

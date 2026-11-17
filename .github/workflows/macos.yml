@@ -34,7 +34,6 @@ jobs:
             extra-cmake-modules \
             ninja
           ./scripts/install-deps.sh macos ${{ matrix.arch }}
-          ./scripts/install-mcbopomofo-deps.sh ${{ matrix.arch }}
           sudo tar xf cache/macos/marisa-${{ matrix.arch }}.tar.bz2 -C /usr/local bin/marisa-build # Make use of Rosetta
           pip install dirhash
 

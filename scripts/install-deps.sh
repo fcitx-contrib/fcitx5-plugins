@@ -7,7 +7,9 @@ macos=(
   fmt
   glib
   glog
+  icu
   json
+  json-c
   json-glib
   keyman-core
   kyotocabinet
@@ -39,7 +41,9 @@ js=(
   fmt
   glib
   glog
+  icu
   json
+  json-c
   json-glib
   keyman-core
   kyotocabinet
@@ -73,7 +77,13 @@ PREBUILDER_TAG=${PREBUILDER_TAG:-$PLATFORM}
 for dep in "${deps[@]}"; do
   file=$dep$POSTFIX.tar.bz2
   [[ -f $CACHE_DIR/$file ]] || curl --retry 3 -fsSLO --output-dir $CACHE_DIR https://github.com/fcitx-contrib/fcitx5-prebuilder/releases/download/$PREBUILDER_TAG/$file
-  tar xf $CACHE_DIR/$file -C $EXTRACT_DIR
+  if [[ $dep == icu || $dep == json-c ]]; then
+    # Keep McBopomofo's ICU headers separate from Keyman's bundled ICU.
+    mkdir -p build/$TARGET/mcbopomofo-deps/usr
+    tar xf $CACHE_DIR/$file -C build/$TARGET/mcbopomofo-deps/usr
+  else
+    tar xf $CACHE_DIR/$file -C $EXTRACT_DIR
+  fi
 done
 
 # Platform-unspecific packages

@@ -212,7 +212,6 @@ endif()
 
 # mcbopomofo
 if (MCBOPOMOFO)
-if (APPLE)
     set(MCBOPOMOFO_DEPS_ROOT "${PROJECT_BINARY_DIR}/mcbopomofo-deps")
     set(MCBOPOMOFO_DEPS_PREFIX "${MCBOPOMOFO_DEPS_ROOT}/usr")
     set(ICU_ROOT "${MCBOPOMOFO_DEPS_PREFIX}" CACHE PATH "" FORCE)
@@ -231,7 +230,6 @@ if (APPLE)
     target_include_directories(McBopomofoLib BEFORE PRIVATE "${MCBOPOMOFO_DEPS_PREFIX}/include")
     target_include_directories(mcbopomofo BEFORE PRIVATE "${MCBOPOMOFO_DEPS_PREFIX}/include")
     target_link_libraries(mcbopomofo PRIVATE "${MCBOPOMOFO_DEPS_PREFIX}/lib/libicudata.a")
-endif()
 endif()
 
 # mozc

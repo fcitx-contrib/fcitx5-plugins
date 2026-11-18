@@ -13,6 +13,7 @@ macos=(
   kkc
   lua
   m17n
+  mcbopomofo
   mozc
   rime
   sayura
@@ -44,6 +45,7 @@ js=(
   kkc
   lua
   m17n
+  mcbopomofo
   mozc
   rime
   sayura
@@ -123,6 +125,7 @@ fi
 extract_dep cskk cskk
 extract_dep hangul libhangul
 extract_dep m17n m17n-db
+extract_dep mcbopomofo icu
 # JS doesn't embed mozc.data to libmozc.so.
 if [[ $PLATFORM == "js" ]]; then
   extract_dep mozc libmozc
@@ -219,6 +222,7 @@ package keyman
 package kkc kkc
 package lua
 package m17n
+package mcbopomofo mcbopomofo mcbopomofo-plain
 package mozc mozc
 package rime rime
 package skk skk

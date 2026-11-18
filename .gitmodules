@@ -79,3 +79,6 @@
 [submodule "fcitx5-zhuyin"]
 	path = fcitx5-zhuyin
 	url = https://github.com/fcitx/fcitx5-zhuyin
+[submodule "fcitx5-mcbopomofo"]
+	path = fcitx5-mcbopomofo
+	url = https://github.com/openvanilla/fcitx5-mcbopomofo.git

@@ -61,6 +61,7 @@ jobs:
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.patch
           git apply --directory=fcitx5-chinese-addons patches/chinese-addons.js.patch
           git apply --directory=fcitx5-jyutping patches/jyutping.patch
+          git apply --directory=fcitx5-mcbopomofo patches/mcbopomofo.patch
           git apply --directory=fcitx5-rime patches/rime.log.patch
           git apply --directory=fcitx5-rime patches/rime.js.patch
           git apply --directory=fcitx5-zhuyin patches/zhuyin.patch
